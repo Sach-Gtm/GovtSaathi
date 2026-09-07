@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { RegisterForm } from "./RegisterForm";
 
-export const metadata = { title: "Register — GovtSathi" };
+export const metadata = { title: "Register — Govt Saathi" };
 
 export default function RegisterPage() {
   return (

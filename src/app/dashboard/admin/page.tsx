@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Admin overview — GovtSathi" };
+export const metadata = { title: "Admin overview — Govt Saathi" };
 
 export default async function AdminHome() {
   await requireRole(["admin"]);

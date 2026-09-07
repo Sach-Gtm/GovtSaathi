@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My applications — GovtSathi" };
+export const metadata = { title: "My applications — Govt Saathi" };
 
 interface AppRow {
   id: string;

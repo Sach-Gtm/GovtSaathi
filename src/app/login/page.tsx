@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { LoginForm } from "./LoginForm";
 
-export const metadata = { title: "Sign in — GovtSathi" };
+export const metadata = { title: "Sign in — Govt Saathi" };
 
 export default function LoginPage({
   searchParams

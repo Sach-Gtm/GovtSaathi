@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Users — GovtSathi" };
+export const metadata = { title: "Users — Govt Saathi" };
 
 export default async function AdminUsers() {
   await requireRole(["admin"]);

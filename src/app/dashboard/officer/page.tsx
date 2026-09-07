@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { OfflineIndicator } from "./OfflineIndicator";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My jobs — GovtSathi" };
+export const metadata = { title: "My jobs — Govt Saathi" };
 
 export default async function OfficerHome() {
   const profile = await requireRole(["officer", "gatc"]);

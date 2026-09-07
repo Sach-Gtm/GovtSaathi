@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { JobWorkspace } from "./JobWorkspace";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Job — GovtSathi" };
+export const metadata = { title: "Job — Govt Saathi" };
 
 export default async function JobPage({ params }: { params: { id: string } }) {
   const profile = await requireRole(["officer", "gatc"]);

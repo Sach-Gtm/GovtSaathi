@@ -48,7 +48,7 @@ export default function LandingPage() {
             </h1>
             <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/70">
               Under the Legal Metrology Act, every scale, dispenser, weighbridge and balance used in trade
-              must be verified before it is used, and re-verified on schedule. GovtSathi puts that whole
+              must be verified before it is used, and re-verified on schedule. Govt Saathi puts that whole
               workflow — application, allocation, field verification, signed certificate, public lookup —
               on one traceable rail.
             </p>
@@ -182,7 +182,7 @@ export default function LandingPage() {
         <div className="container-app flex flex-col gap-3 py-8 text-sm text-ink/60 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Logo compact />
-            <span>© {new Date().getFullYear()} GovtSathi · Team Codebit · SIH26036</span>
+            <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit · SIH26036</span>
           </div>
           <div className="flex gap-5">
             <Link href="/verify">Verify certificate</Link>

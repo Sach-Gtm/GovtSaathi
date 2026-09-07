@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Businesses — GovtSathi" };
+export const metadata = { title: "Businesses — Govt Saathi" };
 
 export default async function TraderBusinesses() {
   await requireRole(["trader"]);

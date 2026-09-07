@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Dashboard — GovtSathi" };
+export const metadata = { title: "Dashboard — Govt Saathi" };
 
 export default function CitizenHome() {
   return (

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 
-export const metadata = { title: "Verify a certificate — GovtSathi" };
+export const metadata = { title: "Verify a certificate — Govt Saathi" };
 
 export default function VerifyIndex({ searchParams }: { searchParams: { q?: string } }) {
   return (

@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { AssignRow } from "./AssignRow";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Application queue — GovtSathi" };
+export const metadata = { title: "Application queue — Govt Saathi" };
 
 export default async function AllocatorHome() {
   await requireRole(["allocator", "admin"]);
