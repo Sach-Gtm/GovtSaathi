@@ -5,7 +5,13 @@ export const metadata: Metadata = {
   title: "GovtSathi — Online Verification of Weighing & Measuring Instruments",
   description:
     "GovtSathi is the online verification and certification system for weighing and measuring instruments under the Legal Metrology Act. Traders, officers, GATCs and citizens on one traceable rail.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000")
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.startsWith("http")
+      ? process.env.NEXT_PUBLIC_APP_URL
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+  )
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
