@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { HeroScene } from "@/components/ui/HeroScene";
 import { WorkflowDiagram } from "@/components/ui/WorkflowDiagram";
-import { VideoGallery } from "@/components/ui/VideoShowcase";
 import {
   RoleCard,
   TraderIcon,
@@ -119,38 +118,6 @@ export default function LandingPage() {
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {ROLES.map((r, i) => <RoleCard key={r.title} role={r} index={i} />)}
-        </div>
-      </section>
-
-      {/* Video */}
-      <section className="border-y border-border bg-canvas">
-        <div className="container-app py-20">
-          <div className="mb-10 text-center">
-            <div className="text-sm font-semibold uppercase tracking-widest text-brand">See it in action</div>
-            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-              A quick scan is all it takes
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-ink/70">
-              Buying a kilo of tomatoes or filling petrol — the same three-second check tells you the
-              scale or the pump has really been verified.
-            </p>
-          </div>
-          <VideoGallery
-            items={[
-              {
-                src: "/demo-market.mp4",
-                poster: "/demo-market-poster.jpg",
-                title: "At the vegetable market",
-                caption: "She scans the sticker on the scale before paying"
-              },
-              {
-                src: "/demo-pump.mp4",
-                poster: "/demo-pump-poster.jpg",
-                title: "At the petrol pump",
-                caption: "He checks the dispenser is verified before filling"
-              }
-            ]}
-          />
         </div>
       </section>
 
