@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { HeroScene } from "@/components/ui/HeroScene";
 import { WorkflowDiagram } from "@/components/ui/WorkflowDiagram";
+import { Reveal } from "@/components/ui/Reveal";
 import {
   RoleCard,
   TraderIcon,
@@ -9,18 +10,29 @@ import {
   AllocatorIcon,
   CitizenIcon
 } from "@/components/ui/RoleCard";
+import { getSessionProfile, roleHomePath } from "@/lib/rbac";
 
-export default function LandingPage() {
+export const dynamic = "force-dynamic";
+
+export default async function LandingPage() {
+  const profile = await getSessionProfile();
+
   return (
     <main className="min-h-screen bg-paper">
       <div className="h-1 tricolor-bar" aria-hidden />
 
       <header className="container-app flex items-center justify-between py-4">
-        <Logo />
+        <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
         <nav className="flex items-center gap-2 text-sm">
           <Link href="/verify" className="btn-ghost">Check a certificate</Link>
-          <Link href="/login" className="btn-outline">Sign in</Link>
-          <Link href="/register" className="btn-accent">Register</Link>
+          {profile ? (
+            <Link href={roleHomePath(profile.role)} className="btn-accent">Go to dashboard</Link>
+          ) : (
+            <>
+              <Link href="/login" className="btn-outline">Sign in</Link>
+              <Link href="/register" className="btn-accent">Register</Link>
+            </>
+          )}
         </nav>
       </header>
 
@@ -52,15 +64,22 @@ export default function LandingPage() {
               confirm it in three seconds.
             </p>
             <div className="rise-in-delay-3 mt-8 flex flex-wrap gap-3">
-              <Link href="/register" className="btn-primary">
-                Get started
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
-                  <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
-              <Link href="/verify" className="btn-outline">
-                Check a certificate
-              </Link>
+              {profile ? (
+                <Link href={roleHomePath(profile.role)} className="btn-primary">
+                  Open my dashboard
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
+                    <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              ) : (
+                <Link href="/register" className="btn-primary">
+                  Get started
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
+                    <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              )}
+              <Link href="/verify" className="btn-outline">Check a certificate</Link>
             </div>
 
             <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-ink/10 pt-6">
@@ -82,64 +101,79 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Instrument marquee */}
-        <div className="border-y border-border bg-canvas/60">
-          <div className="container-app flex items-center gap-3 overflow-hidden py-4 text-sm text-ink/50">
-            <span className="shrink-0 font-medium text-ink/70">What gets checked:</span>
-            <div className="marquee flex gap-8 whitespace-nowrap">
-              {INSTRUMENTS.concat(INSTRUMENTS).map((t, i) => (
-                <span key={i} className="shrink-0">{t}</span>
-              ))}
+        {/* Instrument marquee — label fixed, track clipped in its own rail */}
+        <div className="border-y border-border bg-paper/80">
+          <div className="container-app flex items-center gap-4 py-4 text-sm text-ink/60">
+            <span className="shrink-0 font-medium text-ink/80">What gets checked</span>
+            <span className="h-4 w-px shrink-0 bg-border" />
+            <div className="marquee-rail">
+              <div className="marquee gap-10">
+                {INSTRUMENTS.concat(INSTRUMENTS).map((t, i) => (
+                  <span key={i} className="flex shrink-0 items-center gap-2 whitespace-nowrap">
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* The problem, in plain words */}
+      {/* The problem */}
       <section className="container-app py-20">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <div className="text-sm font-semibold uppercase tracking-widest text-brand">Why this matters</div>
           <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-            When a scale is wrong, the customer pays for it — every single day.
+            When a scale is wrong, the customer pays for it, every single day.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-ink/70">
             Today all of this runs on paper. Applications on a form, scheduling on a phone call, readings
             in a register, certificates as printouts. Nobody can see the full picture, and the one person
-            the law is meant to protect — the customer — can see nothing at all. Govt Saathi fixes that.
+            the law is meant to protect, the customer, can see nothing at all. Govt Saathi fixes that.
           </p>
-        </div>
+        </Reveal>
       </section>
 
-      {/* Roles */}
+      {/* Roles — flip cards */}
       <section className="container-app pb-20">
-        <div className="mb-10 text-center">
+        <Reveal className="mb-10 text-center">
           <div className="text-sm font-semibold uppercase tracking-widest text-brand">Who it is for</div>
           <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">One place, four people, everyone in the loop</h2>
-        </div>
+          <p className="mt-3 text-sm text-ink/60">Tap any card to see, in plain words, what it does.</p>
+        </Reveal>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {ROLES.map((r, i) => <RoleCard key={r.title} role={r} index={i} />)}
+          {ROLES.map((r, i) => (
+            <Reveal key={r.title} delay={i * 90}>
+              <RoleCard role={r} index={i} />
+            </Reveal>
+          ))}
         </div>
       </section>
 
       {/* Workflow */}
-      <section className="container-app py-20">
-        <div className="mb-10 text-center">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">How it works</div>
-          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Four simple steps</h2>
+      <section className="border-y border-border bg-canvas">
+        <div className="container-app py-20">
+          <Reveal className="mb-10 text-center">
+            <div className="text-sm font-semibold uppercase tracking-widest text-brand">How it works</div>
+            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Four simple steps</h2>
+          </Reveal>
+          <Reveal delay={120}>
+            <WorkflowDiagram />
+          </Reveal>
         </div>
-        <WorkflowDiagram />
       </section>
 
       {/* Trust points */}
-      <section className="border-t border-border bg-canvas">
-        <div className="container-app py-20">
-          <div className="mb-12 text-center">
-            <div className="text-sm font-semibold uppercase tracking-widest text-brand">Built to be trusted</div>
-            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">The things that make it real</h2>
-          </div>
-          <div className="grid gap-5 lg:grid-cols-2">
-            {FEATURES.map((f, i) => (
-              <div key={f.title} className="group relative overflow-hidden rounded-2xl border border-border bg-paper p-8">
+      <section className="container-app py-20">
+        <Reveal className="mb-12 text-center">
+          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Built to be trusted</div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">The things that make it real</h2>
+        </Reveal>
+        <div className="grid gap-5 lg:grid-cols-2">
+          {FEATURES.map((f, i) => (
+            <Reveal key={f.title} delay={i * 90}>
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-border bg-canvas p-8 transition-transform hover:-translate-y-1">
                 <div
                   className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-60 blur-3xl transition-opacity group-hover:opacity-90"
                   style={{ background: f.tint }}
@@ -153,49 +187,51 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="container-app py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-ink text-white">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 30%, rgba(11,95,255,0.5), transparent 40%), radial-gradient(circle at 80% 70%, rgba(245,196,0,0.35), transparent 45%)"
-            }}
-            aria-hidden
-          />
-          <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-accent">Anyone can do this</div>
-              <h3 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-                Point your phone at the sticker on a scale. See if it is really checked.
-              </h3>
-              <p className="mt-4 max-w-xl text-white/70">
-                No account, no charge. And because the proof is stored inside the QR code itself, it even
-                works when the shop has no internet.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <Link href="/verify" className="btn-accent w-full justify-center">Check a certificate</Link>
-              <Link href="/register" className="btn-outline w-full justify-center border-white/25 bg-transparent text-white hover:bg-white/5">
-                I run a shop — register
-              </Link>
+      <section className="container-app pb-20">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl bg-ink text-white">
+            <div
+              className="pointer-events-none absolute inset-0 opacity-40"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 20% 30%, rgba(11,95,255,0.5), transparent 40%), radial-gradient(circle at 80% 70%, rgba(245,196,0,0.35), transparent 45%)"
+              }}
+              aria-hidden
+            />
+            <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-accent">Anyone can do this</div>
+                <h3 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+                  Point your phone at the sticker on a scale. See if it is really checked.
+                </h3>
+                <p className="mt-4 max-w-xl text-white/70">
+                  No account, no charge. And because the proof is stored inside the QR code itself, it even
+                  works when the shop has no internet.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <Link href="/verify" className="btn-accent w-full justify-center">Check a certificate</Link>
+                <Link href="/register" className="btn-outline w-full justify-center border-white/25 bg-transparent text-white hover:bg-white/5">
+                  I run a shop, register
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <footer className="border-t border-border">
         <div className="container-app flex flex-col gap-3 py-8 text-sm text-ink/60 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <Logo compact />
             <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit</span>
-          </div>
+          </Link>
           <div className="flex gap-5">
             <Link href="/verify">Check a certificate</Link>
             <Link href="/login">Officer sign-in</Link>
@@ -225,14 +261,26 @@ const ROLES = [
   {
     tag: "Shop owner",
     title: "Apply in a few minutes",
-    body: "Register once, list your scales and machines, and ask for a check. You get a reminder before your certificate runs out.",
+    body: "Register once, list your scales and machines, and ask for a check. Get a reminder before your certificate runs out.",
+    backTitle: "What you do here",
+    steps: [
+      "Add your shop and the machines you use to weigh or measure.",
+      "Send a request for a government check.",
+      "An officer visits, and you get a sticker with a QR code."
+    ],
     icon: TraderIcon,
     accent: "#0B5FFF"
   },
   {
     tag: "Officer",
     title: "Do the check on your phone",
-    body: "Your visits for the day are on your device. Note the readings, take photos, sign it off — even with no network. It syncs later.",
+    body: "Your visits for the day are on your device. Note the readings, take photos, sign it off, even with no network.",
+    backTitle: "What you do here",
+    steps: [
+      "See your list of shops to visit today, in order.",
+      "Check in at the shop, test the machine, record the readings.",
+      "Sign it. A certificate is made, even without internet."
+    ],
     icon: OfficerIcon,
     accent: "#F5C400"
   },
@@ -240,6 +288,12 @@ const ROLES = [
     tag: "Department",
     title: "See everything, in real time",
     body: "Send the nearest officer, not the one who got the loudest complaint. Track where every officer is and how the day is going.",
+    backTitle: "What you do here",
+    steps: [
+      "Give each request to the nearest officer or test centre.",
+      "Watch on a live map where officers are and what is done.",
+      "See which shops are overdue, by state and district."
+    ],
     icon: AllocatorIcon,
     accent: "#0F9D58"
   },
@@ -247,6 +301,12 @@ const ROLES = [
     tag: "Customer",
     title: "Check it in three seconds",
     body: "Scan the sticker on any scale. See when it was checked, until when it is valid, and who checked it. Free, for anyone.",
+    backTitle: "What you do here",
+    steps: [
+      "Point your phone at the QR sticker on the scale.",
+      "See a clear pass or fail, and the valid-until date.",
+      "It works even if the shop has no internet."
+    ],
     icon: CitizenIcon,
     accent: "#E37400"
   }
@@ -256,7 +316,7 @@ const FEATURES = [
   {
     title: "A sticker that can't be faked",
     body:
-      "The QR code carries a digital signature. Scan a real one and it passes. Scan a copied or tampered one and it clearly fails — even with the internet switched off.",
+      "The QR code carries a digital signature. Scan a real one and it passes. Scan a copied or tampered one and it clearly fails, even with the internet switched off.",
     tint: "radial-gradient(circle, rgba(11,95,255,0.35), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

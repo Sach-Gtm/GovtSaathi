@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { VideoCard } from "@/components/ui/VideoShowcase";
 import { RegisterForm } from "./RegisterForm";
 
 export const metadata = { title: "Register — Govt Saathi" };
@@ -15,22 +14,29 @@ export default function RegisterPage() {
           <h1 className="text-4xl font-display font-semibold">Create an account</h1>
           <p className="mt-3 text-ink/70 leading-relaxed">
             Shop owners register here. Officers, GATC staff and department
-            allocators are set up by their office — ask your state Legal
+            allocators are set up by their office. Ask your state Legal
             Metrology office for access, then sign in.
           </p>
 
-          <div className="mt-6">
-            <VideoCard
-              item={{
-                src: "/demo-pump.mp4",
-                poster: "/demo-pump-poster.jpg",
-                title: "This is what your customers do",
-                caption: "A verified sticker is a customer's proof you play fair"
-              }}
-            />
-          </div>
+          <ul className="mt-8 space-y-4">
+            {[
+              ["List your machines once", "Add every scale, pump or measure you use in trade."],
+              ["Ask for a check in a tap", "The nearest officer or test centre is sent to you."],
+              ["Get a sticker customers trust", "A QR certificate anyone can scan in three seconds."]
+            ].map(([t, d], i) => (
+              <li key={t} className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-soft text-sm font-semibold text-brand">
+                  {i + 1}
+                </span>
+                <div>
+                  <div className="font-medium">{t}</div>
+                  <div className="text-sm text-ink/60">{d}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
 
-          <div className="mt-6 rounded-lg border border-border bg-canvas p-4 text-sm">
+          <div className="mt-8 rounded-lg border border-border bg-canvas p-4 text-sm">
             <div className="font-medium">Just want to check a scale?</div>
             <p className="mt-1 text-ink/70">
               You do not need an account for that. Go to the
