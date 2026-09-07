@@ -17,14 +17,17 @@ const NAV: NavItem[] = [
   { href: "/dashboard/trader/certificates", label: "Certificates", roles: ["trader"] },
 
   { href: "/dashboard/officer", label: "Today's jobs", roles: ["officer", "gatc"] },
+  { href: "/dashboard/watchlist", label: "Watchlist & complaints", roles: ["officer", "gatc"] },
   { href: "/dashboard/officer/history", label: "Verification history", roles: ["officer", "gatc"] },
 
   { href: "/dashboard/allocator", label: "Application queue", roles: ["allocator"] },
   { href: "/dashboard/admin/field-ops", label: "Field operations", roles: ["allocator"] },
+  { href: "/dashboard/watchlist", label: "Watchlist & complaints", roles: ["allocator"] },
   { href: "/dashboard/allocator/officers", label: "Officers & GATCs", roles: ["allocator"] },
 
   { href: "/dashboard/admin", label: "Overview", roles: ["admin"] },
   { href: "/dashboard/admin/field-ops", label: "Field operations", roles: ["admin"] },
+  { href: "/dashboard/watchlist", label: "Watchlist & complaints", roles: ["admin"] },
   { href: "/dashboard/admin/audit", label: "Audit log", roles: ["admin"] },
   { href: "/dashboard/admin/users", label: "Users", roles: ["admin"] }
 ];

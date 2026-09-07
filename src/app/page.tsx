@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui/Logo";
 import { HeroScene } from "@/components/ui/HeroScene";
 import { WorkflowDiagram } from "@/components/ui/WorkflowDiagram";
 import { Reveal } from "@/components/ui/Reveal";
+import { LandingNav } from "@/components/ui/LandingNav";
+import { SiteFooter } from "@/components/ui/SiteFooter";
 import {
   RoleCard,
   TraderIcon,
@@ -21,20 +22,7 @@ export default async function LandingPage() {
     <main className="min-h-screen bg-paper">
       <div className="h-1 tricolor-bar" aria-hidden />
 
-      <header className="container-app flex items-center justify-between py-4">
-        <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
-        <nav className="flex items-center gap-2 text-sm">
-          <Link href="/verify" className="btn-ghost">Check a certificate</Link>
-          {profile ? (
-            <Link href={roleHomePath(profile.role)} className="btn-accent">Go to dashboard</Link>
-          ) : (
-            <>
-              <Link href="/login" className="btn-outline">Sign in</Link>
-              <Link href="/register" className="btn-accent">Register</Link>
-            </>
-          )}
-        </nav>
-      </header>
+      <LandingNav dashboardHref={profile ? roleHomePath(profile.role) : undefined} />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -43,13 +31,15 @@ export default async function LandingPage() {
 
         <div className="container-app relative grid gap-12 py-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-24">
           <div>
-            <div className="rise-in mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-canvas/70 px-3 py-1 text-xs font-medium backdrop-blur">
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              <span>Smart India Hackathon 2026</span>
-              <span className="text-ink/40">·</span>
-              <span>Department of Consumer Affairs</span>
+            <div className="rise-in mb-5 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border border-ink/10 bg-canvas/70 px-3 py-1.5 text-xs font-medium backdrop-blur">
+              <span className="inline-flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-accent" />
+                Smart India Hackathon 2026
+              </span>
+              <span className="hidden text-ink/40 sm:inline">·</span>
+              <span className="text-ink/70">Dept. of Consumer Affairs</span>
             </div>
-            <h1 className="rise-in-delay-1 font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
+            <h1 className="rise-in-delay-1 font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
               Is that weighing scale
               <br />
               <span className="relative inline-block">
@@ -226,22 +216,7 @@ export default async function LandingPage() {
         </Reveal>
       </section>
 
-      <footer className="border-t border-border">
-        <div className="container-app flex flex-col gap-3 py-8 text-sm text-ink/60 sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <Logo compact />
-            <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit</span>
-          </Link>
-          <div className="flex gap-5">
-            <Link href="/verify">Check a certificate</Link>
-            <Link href="/login">Officer sign-in</Link>
-            <a href="https://consumeraffairs.nic.in" target="_blank" rel="noreferrer" className="hover:text-brand">
-              Department of Consumer Affairs
-            </a>
-          </div>
-        </div>
-        <div className="h-1 tricolor-bar" aria-hidden />
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
@@ -261,7 +236,7 @@ const ROLES = [
   {
     tag: "Shop owner",
     title: "Apply in a few minutes",
-    body: "Register once, list your scales and machines, and ask for a check. Get a reminder before your certificate runs out.",
+    body: "List your machines, ask for a check, get reminded before it expires.",
     backTitle: "What you do here",
     steps: [
       "Add your shop and the machines you use to weigh or measure.",
@@ -274,7 +249,7 @@ const ROLES = [
   {
     tag: "Officer",
     title: "Do the check on your phone",
-    body: "Your visits for the day are on your device. Note the readings, take photos, sign it off, even with no network.",
+    body: "The day's visits on your device. Record, sign, even with no network.",
     backTitle: "What you do here",
     steps: [
       "See your list of shops to visit today, in order.",
@@ -286,8 +261,8 @@ const ROLES = [
   },
   {
     tag: "Department",
-    title: "See everything, in real time",
-    body: "Send the nearest officer, not the one who got the loudest complaint. Track where every officer is and how the day is going.",
+    title: "See everything, live",
+    body: "Send the nearest officer. Track the day on a live map.",
     backTitle: "What you do here",
     steps: [
       "Give each request to the nearest officer or test centre.",
@@ -300,7 +275,7 @@ const ROLES = [
   {
     tag: "Customer",
     title: "Check it in three seconds",
-    body: "Scan the sticker on any scale. See when it was checked, until when it is valid, and who checked it. Free, for anyone.",
+    body: "Scan the sticker. See if it is valid, and until when. Free, for anyone.",
     backTitle: "What you do here",
     steps: [
       "Point your phone at the QR sticker on the scale.",

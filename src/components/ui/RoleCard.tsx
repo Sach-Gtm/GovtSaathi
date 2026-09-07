@@ -16,7 +16,7 @@ export function RoleCard({ role, index }: { role: Role; index: number }) {
 
   return (
     <div
-      className={`flip-card group h-[280px] ${flipped ? "is-flipped" : ""}`}
+      className={`flip-card group h-[236px] ${flipped ? "is-flipped" : ""}`}
       tabIndex={0}
       role="button"
       aria-label={`${role.tag}: ${role.title}. Tap to see how it works.`}
@@ -45,8 +45,8 @@ export function RoleCard({ role, index }: { role: Role; index: number }) {
               {role.tag}
             </div>
           </div>
-          <div className="mt-4 font-display text-xl font-semibold leading-tight">{role.title}</div>
-          <p className="mt-3 text-sm leading-relaxed text-ink/70">{role.body}</p>
+          <div className="mt-4 font-display text-lg font-semibold leading-tight">{role.title}</div>
+          <p className="mt-2 text-sm leading-snug text-ink/70">{role.body}</p>
           <div className="absolute bottom-4 left-6 flex items-center gap-1.5 text-xs font-medium" style={{ color: role.accent }}>
             <span>How it works</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

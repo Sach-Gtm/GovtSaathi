@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { logCertificateScan } from "@/lib/scans";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,7 @@ export default async function VerifyResult({ params }: { params: { cert: string 
   const cert = decodeURIComponent(params.cert);
   if (!cert || cert === "undefined") notFound();
   const row = await loadCert(cert);
+  if (row) void logCertificateScan(row.certificate_no, "web");
 
   const now = new Date();
   const valid = row && !row.revoked && new Date(row.valid_until) >= now && row.outcome !== "fail";
