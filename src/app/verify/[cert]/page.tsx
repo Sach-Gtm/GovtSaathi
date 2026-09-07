@@ -46,6 +46,7 @@ export default async function VerifyResult({ params }: { params: { cert: string 
 
   return (
     <main className="min-h-screen bg-paper">
+      <div className="h-1 tricolor-bar" aria-hidden />
       <header className="container-app py-5">
         <Link href="/"><Logo /></Link>
       </header>

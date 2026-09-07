@@ -11,6 +11,7 @@ export default function LoginPage({
 }) {
   return (
     <main className="min-h-screen bg-paper">
+      <div className="h-1 tricolor-bar" aria-hidden />
       <header className="container-app py-5"><Logo /></header>
       <div className="container-app grid items-start gap-10 pt-10 lg:grid-cols-2 lg:pt-16">
         <div className="max-w-md">

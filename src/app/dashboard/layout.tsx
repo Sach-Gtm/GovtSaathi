@@ -35,6 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-paper">
+      <div className="h-1 tricolor-bar" aria-hidden />
       <header className="border-b border-border bg-canvas">
         <div className="container-app flex items-center justify-between py-3">
           <Link href="/dashboard"><Logo /></Link>

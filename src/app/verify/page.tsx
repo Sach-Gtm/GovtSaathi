@@ -6,6 +6,7 @@ export const metadata = { title: "Verify a certificate — GovtSathi" };
 export default function VerifyIndex({ searchParams }: { searchParams: { q?: string } }) {
   return (
     <main className="min-h-screen bg-paper">
+      <div className="h-1 tricolor-bar" aria-hidden />
       <header className="container-app py-5">
         <Link href="/"><Logo /></Link>
       </header>
