@@ -4,6 +4,7 @@ import { WorkflowDiagram } from "@/components/ui/WorkflowDiagram";
 import { Reveal } from "@/components/ui/Reveal";
 import { LandingNav } from "@/components/ui/LandingNav";
 import { SiteFooter } from "@/components/ui/SiteFooter";
+import { RotatingHeadline } from "@/components/ui/RotatingHeadline";
 import {
   RoleCard,
   TraderIcon,
@@ -39,13 +40,10 @@ export default async function LandingPage() {
               <span className="hidden text-ink/40 sm:inline">·</span>
               <span className="text-ink/70">Dept. of Consumer Affairs</span>
             </div>
-            <h1 className="rise-in-delay-1 font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="rise-in-delay-1 font-display text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
               Is that weighing scale
               <br />
-              <span className="relative inline-block">
-                <span className="text-brand">actually honest?</span>
-                <span className="absolute inset-x-0 -bottom-2 h-2 rounded-full bg-accent/60" aria-hidden />
-              </span>
+              <RotatingHeadline phrases={HERO_PHRASES} />
             </h1>
             <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/75">
               By law, every scale, petrol pump, weighbridge and measure used in a shop has to be checked
@@ -220,6 +218,14 @@ export default async function LandingPage() {
     </main>
   );
 }
+
+const HERO_PHRASES = [
+  "actually honest?",
+  "cheating you?",
+  "short on weight?",
+  "giving you full value?",
+  "telling the truth?"
+];
 
 const INSTRUMENTS = [
   "Shop weighing scales",
