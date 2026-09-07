@@ -94,6 +94,8 @@
   50%      { transform: translateY(6px); }
 }
 @keyframes gs-spin-slow { to { transform: rotate(360deg); } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee { animation: marquee 26s linear infinite; }
 @keyframes gs-scan {
   0% { transform: translate(0, 0); opacity: 0; }
   20% { opacity: 0.55; }
@@ -107,7 +109,7 @@
 .gs-scan       { animation: gs-scan 3.4s ease-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .gs-float, .gs-float-slow, .gs-float-alt, .gs-spin-slow, .gs-scan,
+  .gs-float, .gs-float-slow, .gs-float-alt, .gs-spin-slow, .gs-scan, .marquee,
   .rise-in, .rise-in-delay-1, .rise-in-delay-2, .rise-in-delay-3 {
     animation: none !important;
   }

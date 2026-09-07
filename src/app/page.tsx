@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { HeroScene } from "@/components/ui/HeroScene";
 import { WorkflowDiagram } from "@/components/ui/WorkflowDiagram";
+import { VideoShowcase } from "@/components/ui/VideoShowcase";
 import {
   RoleCard,
   TraderIcon,
@@ -13,13 +14,12 @@ import {
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-paper">
-      {/* Tricolor rail — Republic of India */}
       <div className="h-1 tricolor-bar" aria-hidden />
 
       <header className="container-app flex items-center justify-between py-4">
         <Logo />
         <nav className="flex items-center gap-2 text-sm">
-          <Link href="/verify" className="btn-ghost">Verify a certificate</Link>
+          <Link href="/verify" className="btn-ghost">Check a certificate</Link>
           <Link href="/login" className="btn-outline">Sign in</Link>
           <Link href="/register" className="btn-accent">Register</Link>
         </nav>
@@ -36,21 +36,21 @@ export default function LandingPage() {
               <span className="h-2 w-2 rounded-full bg-accent" />
               <span>Smart India Hackathon 2026</span>
               <span className="text-ink/40">·</span>
-              <span>SIH26036 · Department of Consumer Affairs</span>
+              <span>Department of Consumer Affairs</span>
             </div>
             <h1 className="rise-in-delay-1 font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-              Every weighing instrument in India,
+              Is that weighing scale
               <br />
               <span className="relative inline-block">
-                <span className="text-brand">checked and traceable online.</span>
+                <span className="text-brand">actually honest?</span>
                 <span className="absolute inset-x-0 -bottom-2 h-2 rounded-full bg-accent/60" aria-hidden />
               </span>
             </h1>
-            <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/70">
-              Under the Legal Metrology Act, every scale, dispenser, weighbridge and balance used in trade
-              must be verified before it is used, and re-verified on schedule. Govt Saathi puts that whole
-              workflow — application, allocation, field verification, signed certificate, public lookup —
-              on one traceable rail.
+            <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/75">
+              By law, every scale, petrol pump, weighbridge and measure used in a shop has to be checked
+              by the government before it is used. Govt Saathi brings that whole process online, so a shop
+              owner can apply in minutes, an officer can do the check on their phone, and any customer can
+              confirm it in three seconds.
             </p>
             <div className="rise-in-delay-3 mt-8 flex flex-wrap gap-3">
               <Link href="/register" className="btn-primary">
@@ -60,19 +60,18 @@ export default function LandingPage() {
                 </svg>
               </Link>
               <Link href="/verify" className="btn-outline">
-                Verify by certificate number
+                Check a certificate
               </Link>
             </div>
 
-            {/* Trust rail */}
             <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-ink/10 pt-6">
               {[
-                { k: "10", u: "states supported at launch" },
-                { k: "4", u: "roles on one traceable rail" },
-                { k: "3s", u: "public verification time" }
+                { k: "Free", u: "for anyone to check a scale" },
+                { k: "Works offline", u: "in basements and rural markets" },
+                { k: "3 seconds", u: "to confirm at the counter" }
               ].map((s) => (
                 <div key={s.u}>
-                  <div className="font-display text-2xl font-semibold">{s.k}</div>
+                  <div className="font-display text-xl font-semibold">{s.k}</div>
                   <div className="mt-1 text-xs text-ink/60 leading-snug">{s.u}</div>
                 </div>
               ))}
@@ -83,69 +82,96 @@ export default function LandingPage() {
             <HeroScene />
           </div>
         </div>
+
+        {/* Instrument marquee */}
+        <div className="border-y border-border bg-canvas/60">
+          <div className="container-app flex items-center gap-3 overflow-hidden py-4 text-sm text-ink/50">
+            <span className="shrink-0 font-medium text-ink/70">What gets checked:</span>
+            <div className="marquee flex gap-8 whitespace-nowrap">
+              {INSTRUMENTS.concat(INSTRUMENTS).map((t, i) => (
+                <span key={i} className="shrink-0">{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The problem, in plain words */}
+      <section className="container-app py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Why this matters</div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+            When a scale is wrong, the customer pays for it — every single day.
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-ink/70">
+            Today all of this runs on paper. Applications on a form, scheduling on a phone call, readings
+            in a register, certificates as printouts. Nobody can see the full picture, and the one person
+            the law is meant to protect — the customer — can see nothing at all. Govt Saathi fixes that.
+          </p>
+        </div>
       </section>
 
       {/* Roles */}
-      <section className="container-app py-20">
-        <div className="mb-10 max-w-2xl">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Four people on one page</div>
-          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-            The Act protects the buyer. Nobody could see the whole picture — until now.
-          </h2>
+      <section className="container-app pb-20">
+        <div className="mb-10 text-center">
+          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Who it is for</div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">One place, four people, everyone in the loop</h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {ROLES.map((r, i) => <RoleCard key={r.title} role={r} index={i} />)}
         </div>
       </section>
 
-      {/* Workflow */}
+      {/* Video */}
       <section className="border-y border-border bg-canvas">
         <div className="container-app py-20">
-          <div className="max-w-2xl">
-            <div className="text-sm font-semibold uppercase tracking-widest text-brand">How one verification runs</div>
-            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-              Trader files it. Allocator routes it. Officer records it. Citizen scans it.
-            </h2>
+          <div className="mb-10 text-center">
+            <div className="text-sm font-semibold uppercase tracking-widest text-brand">See it in action</div>
+            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">From application to a scannable sticker</h2>
           </div>
-          <div className="mt-14">
-            <WorkflowDiagram />
-          </div>
+          <VideoShowcase />
         </div>
       </section>
 
-      {/* The four things beyond the brief */}
+      {/* Workflow */}
       <section className="container-app py-20">
-        <div className="mb-12 max-w-2xl">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Four things beyond the brief</div>
-          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-            The Department asked for nine. We build all nine, and add these four on top.
-          </h2>
+        <div className="mb-10 text-center">
+          <div className="text-sm font-semibold uppercase tracking-widest text-brand">How it works</div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Four simple steps</h2>
         </div>
-        <div className="grid gap-5 lg:grid-cols-2">
-          {FEATURES.map((f, i) => (
-            <div key={f.title} className="group relative overflow-hidden rounded-2xl border border-border bg-canvas p-8">
-              <div
-                className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-60 blur-3xl transition-opacity group-hover:opacity-90"
-                style={{ background: f.tint }}
-                aria-hidden
-              />
-              <div className="relative flex items-start gap-5">
-                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-ink text-white">
-                  {f.icon}
-                </div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-widest text-ink/50">0{i + 1}</div>
-                  <div className="mt-1 font-display text-xl font-semibold leading-snug">{f.title}</div>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/70">{f.body}</p>
+        <WorkflowDiagram />
+      </section>
+
+      {/* Trust points */}
+      <section className="border-t border-border bg-canvas">
+        <div className="container-app py-20">
+          <div className="mb-12 text-center">
+            <div className="text-sm font-semibold uppercase tracking-widest text-brand">Built to be trusted</div>
+            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">The things that make it real</h2>
+          </div>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="group relative overflow-hidden rounded-2xl border border-border bg-paper p-8">
+                <div
+                  className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-60 blur-3xl transition-opacity group-hover:opacity-90"
+                  style={{ background: f.tint }}
+                  aria-hidden
+                />
+                <div className="relative flex items-start gap-5">
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-ink text-white">{f.icon}</div>
+                  <div>
+                    <div className="font-display text-xl font-semibold leading-snug">{f.title}</div>
+                    <p className="mt-3 text-sm leading-relaxed text-ink/70">{f.body}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="container-app pb-24">
+      <section className="container-app py-20">
         <div className="relative overflow-hidden rounded-3xl bg-ink text-white">
           <div
             className="pointer-events-none absolute inset-0 opacity-40"
@@ -157,21 +183,19 @@ export default function LandingPage() {
           />
           <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-accent">Try the public verifier</div>
+              <div className="text-xs font-semibold uppercase tracking-widest text-accent">Anyone can do this</div>
               <h3 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-                Scan the sticker. See when it was checked, until when it is valid, who signed it.
+                Point your phone at the sticker on a scale. See if it is really checked.
               </h3>
               <p className="mt-4 max-w-xl text-white/70">
-                The signature travels in the QR itself. A scan validates even when this site is unreachable —
-                any officer app can verify offline against the public key.
+                No account, no charge. And because the proof is stored inside the QR code itself, it even
+                works when the shop has no internet.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <Link href="/verify" className="btn-accent w-full justify-center">
-                Open the verifier
-              </Link>
-              <Link href="/register" className="btn-outline w-full justify-center bg-transparent text-white border-white/25 hover:bg-white/5">
-                Register as a trader
+              <Link href="/verify" className="btn-accent w-full justify-center">Check a certificate</Link>
+              <Link href="/register" className="btn-outline w-full justify-center border-white/25 bg-transparent text-white hover:bg-white/5">
+                I run a shop — register
               </Link>
             </div>
           </div>
@@ -182,10 +206,10 @@ export default function LandingPage() {
         <div className="container-app flex flex-col gap-3 py-8 text-sm text-ink/60 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Logo compact />
-            <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit · SIH26036</span>
+            <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit</span>
           </div>
           <div className="flex gap-5">
-            <Link href="/verify">Verify certificate</Link>
+            <Link href="/verify">Check a certificate</Link>
             <Link href="/login">Officer sign-in</Link>
             <a href="https://consumeraffairs.nic.in" target="_blank" rel="noreferrer" className="hover:text-brand">
               Department of Consumer Affairs
@@ -198,32 +222,43 @@ export default function LandingPage() {
   );
 }
 
+const INSTRUMENTS = [
+  "Shop weighing scales",
+  "Petrol & diesel pumps",
+  "Weighbridges",
+  "Jewellery balances",
+  "Milk testers",
+  "Cloth & length measures",
+  "LPG & fuel meters",
+  "Grocery scales"
+];
+
 const ROLES = [
   {
-    tag: "Trader",
-    title: "One shop, every scale",
-    body: "Register once, list every instrument you own, file for verification and re-verification. Get an alert before the certificate expires.",
+    tag: "Shop owner",
+    title: "Apply in a few minutes",
+    body: "Register once, list your scales and machines, and ask for a check. You get a reminder before your certificate runs out.",
     icon: TraderIcon,
     accent: "#0B5FFF"
   },
   {
-    tag: "Officer · GATC",
-    title: "The day's jobs on your phone",
-    body: "Assigned jobs download to the device. Record readings, error against tolerance, photos and signature — with no signal. Syncs when it can.",
+    tag: "Officer",
+    title: "Do the check on your phone",
+    body: "Your visits for the day are on your device. Note the readings, take photos, sign it off — even with no network. It syncs later.",
     icon: OfficerIcon,
     accent: "#F5C400"
   },
   {
-    tag: "Allocator",
-    title: "Nearest verifier, not loudest complaint",
-    body: "Route applications by district, instrument class and load. Watch pendency by state, department and officer in real time.",
+    tag: "Department",
+    title: "See everything, in real time",
+    body: "Send the nearest officer, not the one who got the loudest complaint. Track where every officer is and how the day is going.",
     icon: AllocatorIcon,
     accent: "#0F9D58"
   },
   {
-    tag: "Citizen",
-    title: "Three seconds at the counter",
-    body: "Point a phone at the sticker on the scale. See when it was verified, until when it is valid, and who checked it. Works even in a basement godown.",
+    tag: "Customer",
+    title: "Check it in three seconds",
+    body: "Scan the sticker on any scale. See when it was checked, until when it is valid, and who checked it. Free, for anyone.",
     icon: CitizenIcon,
     accent: "#E37400"
   }
@@ -231,9 +266,9 @@ const ROLES = [
 
 const FEATURES = [
   {
-    title: "A certificate that proves itself",
+    title: "A sticker that can't be faked",
     body:
-      "The QR on the sticker carries an Ed25519 signature over the certificate identity. On stage we turn the wifi off, scan a real one — passes. Scan a tampered one — fails.",
+      "The QR code carries a digital signature. Scan a real one and it passes. Scan a copied or tampered one and it clearly fails — even with the internet switched off.",
     tint: "radial-gradient(circle, rgba(11,95,255,0.35), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -243,9 +278,9 @@ const FEATURES = [
     )
   },
   {
-    title: "Built for no signal",
+    title: "Works without a signal",
     body:
-      "Officers work in basements and rural markets. The field app holds the day's jobs locally, records everything offline, and resolves conflicts when it syncs.",
+      "Officers work in basements, godowns and rural markets. The app keeps the day's work on the phone and uploads it the moment there is a connection again.",
     tint: "radial-gradient(circle, rgba(245,196,0,0.30), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -257,21 +292,21 @@ const FEATURES = [
     )
   },
   {
-    title: "Records that cross borders",
+    title: "Every visit is on the map",
     body:
-      "A weighbridge moves state. A chain of shops operates across four districts. The data model handles jurisdiction rather than assume one — the department named this problem itself.",
+      "When an officer checks in at a shop, the time and location are recorded. The department can see who went where, how many shops are covered, and how long each check took.",
     tint: "radial-gradient(circle, rgba(15,157,88,0.30), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M4 6 L9 4 L15 6 L20 4 V18 L15 20 L9 18 L4 20 Z" stroke="#F5C400" strokeWidth="1.7" strokeLinejoin="round" />
-        <path d="M9 4 V18 M15 6 V20" stroke="#F5C400" strokeWidth="1.4" />
+        <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11Z" stroke="#F5C400" strokeWidth="1.7" />
+        <circle cx="12" cy="10" r="2.5" stroke="#F5C400" strokeWidth="1.7" />
       </svg>
     )
   },
   {
-    title: "A written architecture",
+    title: "Nothing gets lost",
     body:
-      "Threat model. Permission matrix across all four roles. Audit logging for every critical action. How it would actually be rolled out to a state. Written before code.",
+      "Every important action is written to a permanent record. A shop that moves to another state keeps its history. A certificate can always be traced back to the officer who signed it.",
     tint: "radial-gradient(circle, rgba(227,116,0,0.30), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

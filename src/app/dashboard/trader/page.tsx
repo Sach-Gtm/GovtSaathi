@@ -3,7 +3,8 @@ import { requireRole } from "@/lib/rbac";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatDate } from "@/lib/utils";
+import { StatTile } from "@/components/ui/StatTile";
+import { formatDate, greeting } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My applications — Govt Saathi" };
@@ -19,7 +20,7 @@ interface AppRow {
 }
 
 export default async function TraderApplications() {
-  await requireRole(["trader"]);
+  const profile = await requireRole(["trader"]);
   const supabase = createSupabaseServerClient();
   const { data } = await supabase
     .from("applications")
@@ -28,15 +29,32 @@ export default async function TraderApplications() {
 
   const apps = (data ?? []) as unknown as AppRow[];
 
+  const inProgress = apps.filter((a) => ["submitted", "assigned", "in_verification"].includes(a.status)).length;
+  const verified = apps.filter((a) => a.status === "verified").length;
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-end justify-between gap-4">
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-semibold">My applications</h1>
-          <p className="mt-1 text-ink/70">Verification and re-verification requests you have filed.</p>
+          <h1 className="font-display text-2xl font-semibold">{greeting(profile.full_name)}</h1>
+          <p className="mt-1 text-ink/70">
+            This is where you ask us to check your weighing scales and other instruments, and see how each
+            request is going.
+          </p>
         </div>
-        <Link href="/dashboard/trader/applications/new" className="btn-primary">New application</Link>
+        <Link href="/dashboard/trader/applications/new" className="btn-primary">+ New request</Link>
       </div>
+
+      {apps.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-3">
+          <StatTile label="Requests filed" value={apps.length} accent="#0B5FFF" />
+          <StatTile label="Being checked" value={inProgress} accent="#E37400" hint="with an officer" />
+          <StatTile label="Verified" value={verified} accent="#0F9D58" hint="certificate ready" />
+        </div>
+      )}
+
+      <div>
+        <h2 className="mb-3 font-display text-lg font-semibold">Your requests</h2>
 
       {apps.length === 0 ? (
         <EmptyState
@@ -74,6 +92,7 @@ export default async function TraderApplications() {
           </table>
         </div>
       )}
+      </div>
     </div>
   );
 }

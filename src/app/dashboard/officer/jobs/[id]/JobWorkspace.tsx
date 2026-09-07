@@ -22,12 +22,15 @@ interface Assignment {
   scheduled_for: string | null;
   accepted_at: string | null;
   completed_at: string | null;
+  check_in_at: string | null;
+  check_out_at: string | null;
   notes: string | null;
   application: {
     id: string;
     application_no: string;
     notes: string | null;
     business: {
+      id: string;
       legal_name: string;
       trade_name: string | null;
       address_line1: string;
@@ -71,6 +74,42 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
   const [rows, setRows] = useState<Row[]>(instruments.map((i) => blank(i.id)));
   const [accepted, setAccepted] = useState<boolean>(!!assignment.accepted_at);
   const [saveState, setSaveState] = useState<string | null>(null);
+  const [checkInAt, setCheckInAt] = useState<string | null>(assignment.check_in_at);
+  const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoState, setGeoState] = useState<string | null>(null);
+
+  async function checkIn() {
+    setGeoState("Getting your location…");
+    const finish = async (lat: number | null, lng: number | null) => {
+      const now = new Date().toISOString();
+      await supabase
+        .from("assignments")
+        .update({ check_in_at: now, check_in_lat: lat, check_in_lng: lng })
+        .eq("id", assignment.id);
+      // Tag the shop's location too, if we have a fix and it has none yet
+      if (lat != null && lng != null) {
+        setGeo({ lat, lng });
+        await supabase
+          .from("businesses")
+          .update({ lat, lng })
+          .eq("id", (assignment.application.business as any).id ?? "")
+          .is("lat", null);
+      }
+      setCheckInAt(now);
+      setGeoState(lat != null ? "Checked in with location" : "Checked in (no location)");
+      router.refresh();
+    };
+
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      await finish(null, null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => void finish(pos.coords.latitude, pos.coords.longitude),
+      () => void finish(null, null),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+    );
+  }
 
   useEffect(() => {
     // Cache assignment into IndexedDB so it survives offline
@@ -142,7 +181,11 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
     // Ensure everything is at least queued
     for (let i = 0; i < rows.length; i++) if (rows[i].status === "pending") await queueRow(i);
     await drainSyncQueue();
-    await supabase.from("assignments").update({ completed_at: new Date().toISOString() }).eq("id", assignment.id);
+    const now = new Date().toISOString();
+    await supabase
+      .from("assignments")
+      .update({ completed_at: now, check_out_at: now })
+      .eq("id", assignment.id);
     router.push("/dashboard/officer");
     router.refresh();
   }
@@ -167,6 +210,39 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
         <div className="card p-4 flex items-center justify-between">
           <div className="text-sm">Accept this job before starting the site visit.</div>
           <button onClick={acceptJob} className="btn-primary">Accept</button>
+        </div>
+      )}
+
+      {/* Geo check-in */}
+      {accepted && (
+        <div className="card p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className={`h-2.5 w-2.5 rounded-full ${checkInAt ? "bg-success" : "bg-ink/30"}`} />
+                <span className="font-medium">
+                  {checkInAt ? "Checked in at this shop" : "Not checked in yet"}
+                </span>
+              </div>
+              <div className="mt-0.5 text-xs text-ink/60">
+                {checkInAt
+                  ? `Arrived ${new Date(checkInAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}${
+                      geo ? ` · ${geo.lat.toFixed(4)}, ${geo.lng.toFixed(4)}` : ""
+                    }`
+                  : "Check in when you reach the shop. We tag the time and your location so your visit is on record."}
+              </div>
+              {geoState && <div className="mt-0.5 text-xs text-brand">{geoState}</div>}
+            </div>
+            {!checkInAt && (
+              <button onClick={checkIn} className="btn-accent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mr-1">
+                  <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11Z" stroke="currentColor" strokeWidth="1.6" />
+                  <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+                </svg>
+                Check in here
+              </button>
+            )}
+          </div>
         </div>
       )}
 

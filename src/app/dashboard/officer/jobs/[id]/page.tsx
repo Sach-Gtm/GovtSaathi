@@ -13,10 +13,10 @@ export default async function JobPage({ params }: { params: { id: string } }) {
   const { data } = await supabase
     .from("assignments")
     .select(`
-      id, scheduled_for, accepted_at, completed_at, notes,
+      id, scheduled_for, accepted_at, completed_at, notes, check_in_at, check_out_at,
       application:applications(
         id, application_no, notes,
-        business:businesses(legal_name, trade_name, address_line1, city, state_code, contact_phone),
+        business:businesses(id, legal_name, trade_name, address_line1, city, state_code, contact_phone),
         application_instruments:application_instruments(instrument:instruments(id, category, make, model, serial_no, capacity, accuracy_class))
       )
     `)
