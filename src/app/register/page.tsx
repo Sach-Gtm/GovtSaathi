@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
+import { VideoCard } from "@/components/ui/VideoShowcase";
 import { RegisterForm } from "./RegisterForm";
 
 export const metadata = { title: "Register — Govt Saathi" };
@@ -13,15 +14,27 @@ export default function RegisterPage() {
         <div className="max-w-md">
           <h1 className="text-4xl font-display font-semibold">Create an account</h1>
           <p className="mt-3 text-ink/70 leading-relaxed">
-            Traders self-register here. Officers, GATC staff and allocators are
-            provisioned by their department — request access from your state
-            Legal Metrology office, then sign in.
+            Shop owners register here. Officers, GATC staff and department
+            allocators are set up by their office — ask your state Legal
+            Metrology office for access, then sign in.
           </p>
+
+          <div className="mt-6">
+            <VideoCard
+              item={{
+                src: "/demo-pump.mp4",
+                poster: "/demo-pump-poster.jpg",
+                title: "This is what your customers do",
+                caption: "A verified sticker is a customer's proof you play fair"
+              }}
+            />
+          </div>
+
           <div className="mt-6 rounded-lg border border-border bg-canvas p-4 text-sm">
-            <div className="font-medium">Not a business owner?</div>
+            <div className="font-medium">Just want to check a scale?</div>
             <p className="mt-1 text-ink/70">
-              You do not need an account to verify a certificate. Head to the
-              {" "}<Link href="/verify" className="text-brand underline">public verifier</Link>{" "}
+              You do not need an account for that. Go to the
+              {" "}<Link href="/verify" className="text-brand underline">public check</Link>{" "}
               or scan the QR on the sticker.
             </p>
           </div>
