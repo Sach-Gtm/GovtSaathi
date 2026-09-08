@@ -33,11 +33,11 @@ export function SplashScreen() {
     }
 
     setPhase("enter");
-    const t1 = setTimeout(() => setPhase("leaving"), 1400);
+    const t1 = setTimeout(() => setPhase("leaving"), 750);
     const t2 = setTimeout(() => {
       try { sessionStorage.setItem("govtsaathi:splash", "1"); } catch {}
       setPhase("done");
-    }, 1900);
+    }, 1100);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 

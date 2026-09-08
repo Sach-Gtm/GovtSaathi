@@ -12,18 +12,13 @@ import {
   AllocatorIcon,
   CitizenIcon
 } from "@/components/ui/RoleCard";
-import { getSessionProfile, roleHomePath } from "@/lib/rbac";
 
-export const dynamic = "force-dynamic";
-
-export default async function LandingPage() {
-  const profile = await getSessionProfile();
-
+export default function LandingPage() {
   return (
     <main className="min-h-screen bg-paper">
       <div className="h-1 tricolor-bar" aria-hidden />
 
-      <LandingNav dashboardHref={profile ? roleHomePath(profile.role) : undefined} />
+      <LandingNav />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -52,21 +47,12 @@ export default async function LandingPage() {
               confirm it in three seconds.
             </p>
             <div className="rise-in-delay-3 mt-8 flex flex-wrap gap-3">
-              {profile ? (
-                <Link href={roleHomePath(profile.role)} className="btn-primary">
-                  Open my dashboard
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
-                    <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
-              ) : (
-                <Link href="/register" className="btn-primary">
-                  Get started
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
-                    <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
-              )}
+              <Link href="/register" className="btn-primary">
+                Get started
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
+                  <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
               <Link href="/verify" className="btn-outline">Check a certificate</Link>
             </div>
 

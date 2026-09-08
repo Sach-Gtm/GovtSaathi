@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SplashScreen } from "@/components/ui/SplashScreen";
 import { RegisterSW } from "@/components/ui/RegisterSW";
+
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-sans", display: "swap" });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-display", display: "swap" });
 
 export const metadata: Metadata = {
   title: "MAAPSETU — Online Verification of Weighing & Measuring Instruments",
@@ -42,13 +46,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <SplashScreen />
         {children}

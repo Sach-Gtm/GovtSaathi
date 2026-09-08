@@ -1,11 +1,35 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { InstallPWA } from "./InstallPWA";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
-export function LandingNav({ dashboardHref }: { dashboardHref?: string }) {
+/**
+ * Auth state is detected on the client (reads the cached session, no blocking
+ * network on the server) so the landing page can be fully static and fast.
+ */
+export function LandingNav() {
   const [open, setOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+  }, []);
+
+  const authButtons = (mobile = false) => {
+    const w = mobile ? "w-full justify-center" : "";
+    if (signedIn) {
+      return <Link href="/dashboard" className={`btn-accent ${w}`} onClick={() => setOpen(false)}>Go to dashboard</Link>;
+    }
+    return (
+      <>
+        <Link href="/login" className={`btn-outline ${w}`} onClick={() => setOpen(false)}>Sign in</Link>
+        <Link href="/register" className={`btn-accent ${w}`} onClick={() => setOpen(false)}>Register</Link>
+      </>
+    );
+  };
 
   return (
     <header className="relative z-30 border-b border-transparent">
@@ -14,21 +38,12 @@ export function LandingNav({ dashboardHref }: { dashboardHref?: string }) {
           <Logo />
         </Link>
 
-        {/* Desktop */}
         <nav className="hidden items-center gap-2 text-sm md:flex">
           <Link href="/verify" className="btn-ghost">Check a certificate</Link>
           <InstallPWA className="btn-ghost" />
-          {dashboardHref ? (
-            <Link href={dashboardHref} className="btn-accent">Go to dashboard</Link>
-          ) : (
-            <>
-              <Link href="/login" className="btn-outline">Sign in</Link>
-              <Link href="/register" className="btn-accent">Register</Link>
-            </>
-          )}
+          {signedIn === null ? <span className="h-9 w-40" /> : authButtons()}
         </nav>
 
-        {/* Mobile toggle */}
         <button
           className="grid h-10 w-10 place-items-center rounded-lg border border-border bg-canvas md:hidden"
           onClick={() => setOpen((v) => !v)}
@@ -43,19 +58,11 @@ export function LandingNav({ dashboardHref }: { dashboardHref?: string }) {
         </button>
       </div>
 
-      {/* Mobile drawer */}
       {open && (
         <div className="border-b border-border bg-canvas md:hidden">
           <nav className="container-app flex flex-col gap-2 py-4 text-sm">
             <Link href="/verify" className="btn-outline w-full justify-center" onClick={() => setOpen(false)}>Check a certificate</Link>
-            {dashboardHref ? (
-              <Link href={dashboardHref} className="btn-accent w-full justify-center" onClick={() => setOpen(false)}>Go to dashboard</Link>
-            ) : (
-              <>
-                <Link href="/login" className="btn-outline w-full justify-center" onClick={() => setOpen(false)}>Sign in</Link>
-                <Link href="/register" className="btn-accent w-full justify-center" onClick={() => setOpen(false)}>Register</Link>
-              </>
-            )}
+            {signedIn !== null && authButtons(true)}
             <Link href="/report?type=complaint" className="btn-ghost w-full justify-center" onClick={() => setOpen(false)}>Complain about a shop</Link>
             <InstallPWA className="btn-ghost w-full justify-center" />
           </nav>

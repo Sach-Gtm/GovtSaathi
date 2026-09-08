@@ -1,13 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/register", "/verify", "/api/verify", "/_next", "/favicon", "/assets", "/"];
-
-function isPublic(path: string) {
-  if (path === "/") return true;
-  return PUBLIC_PREFIXES.some((p) => p !== "/" && (path === p || path.startsWith(p + "/")));
-}
-
+/**
+ * Runs ONLY on /dashboard routes (see matcher). Public pages — landing,
+ * /verify, /login, /register, /report, /api/* — skip middleware entirely, so
+ * they never pay the auth round-trip. That keeps the public verifier and the
+ * marketing pages fast.
+ */
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({ request: { headers: req.headers } });
 
@@ -31,12 +30,10 @@ export async function middleware(req: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  const path = req.nextUrl.pathname;
-
-  if (!user && !isPublic(path)) {
+  if (!user) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", path);
+    url.searchParams.set("next", req.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
 
@@ -44,5 +41,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|assets/).*)"]
+  matcher: ["/dashboard/:path*"]
 };
