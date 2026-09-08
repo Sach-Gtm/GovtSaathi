@@ -126,7 +126,7 @@ export default async function VerifyResult({ params }: { params: { cert: string 
             </div>
 
             <div className="border-t border-border px-6 py-4 text-xs text-ink/60">
-              Data source: Govt Saathi — the official verification ledger. If this number appears here,
+              Data source: MAAPSETU — the official verification ledger. If this number appears here,
               it was issued by an authorised Legal Metrology Officer or a Government Approved Test Centre.
             </div>
           </div>

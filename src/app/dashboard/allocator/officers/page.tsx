@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Officers & GATCs — Govt Saathi" };
+export const metadata = { title: "Officers & GATCs — MAAPSETU" };
 
 export default async function AllocatorOfficers() {
   await requireRole(["allocator", "admin"]);

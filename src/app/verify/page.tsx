@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 
-export const metadata = { title: "Verify a certificate — Govt Saathi" };
+export const metadata = { title: "Verify a certificate — MAAPSETU" };
 
 export default function VerifyIndex({ searchParams }: { searchParams: { q?: string } }) {
   return (
     <main className="min-h-screen bg-paper">
       <div className="h-1 tricolor-bar" aria-hidden />
       <header className="container-app py-5">
-        <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
+        <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
       </header>
 
       <div className="container-app grid gap-10 pt-8 lg:grid-cols-[1fr_1fr] lg:items-center">

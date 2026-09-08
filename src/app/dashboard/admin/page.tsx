@@ -7,7 +7,7 @@ import { BarChart, HBar } from "@/components/ui/Charts";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Overview — Govt Saathi" };
+export const metadata = { title: "Overview — MAAPSETU" };
 
 export default async function AdminHome() {
   const profile = await requireRole(["admin"]);

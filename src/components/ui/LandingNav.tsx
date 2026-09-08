@@ -10,7 +10,7 @@ export function LandingNav({ dashboardHref }: { dashboardHref?: string }) {
   return (
     <header className="relative z-30 border-b border-transparent">
       <div className="container-app flex items-center justify-between py-3.5">
-        <Link href="/" aria-label="Govt Saathi home" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="MAAPSETU home" onClick={() => setOpen(false)}>
           <Logo />
         </Link>
 

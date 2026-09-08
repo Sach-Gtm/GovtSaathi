@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NewApplicationForm } from "./NewApplicationForm";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "New application — Govt Saathi" };
+export const metadata = { title: "New application — MAAPSETU" };
 
 export default async function NewApplicationPage() {
   await requireRole(["trader"]);

@@ -3,7 +3,7 @@ import { LogoMark } from "@/components/ui/LogoMark";
 import { GovScene } from "@/components/ui/GovScene";
 import { LoginForm } from "./LoginForm";
 
-export const metadata = { title: "Sign in — Govt Saathi" };
+export const metadata = { title: "Sign in — MAAPSETU" };
 
 export default function LoginPage({
   searchParams
@@ -19,10 +19,10 @@ export default function LoginPage({
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/70 to-transparent" aria-hidden />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-12">
-          <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Govt Saathi home">
+          <Link href="/" className="inline-flex items-center gap-2.5" aria-label="MAAPSETU home">
             <LogoMark size={40} />
             <span className="font-display text-xl font-semibold">
-              Govt <span className="text-accent">Saathi</span>
+              MAAP<span className="text-accent">SETU</span>
             </span>
           </Link>
 
@@ -47,7 +47,7 @@ export default function LoginPage({
           </div>
 
           <div className="text-xs leading-relaxed text-white/55">
-            A Smart India Hackathon 2026 prototype by Team Codebit, built for problem statement SIH26036
+            A Smart India Hackathon 2026 prototype by Team GovtSaathi, built for problem statement SIH26036
             from the Department of Consumer Affairs, Ministry of Consumer Affairs, Food &amp; Public
             Distribution, Government of India. Not an official government portal.
           </div>
@@ -60,7 +60,7 @@ export default function LoginPage({
         <header className="p-6 lg:hidden">
           <Link href="/" className="inline-flex items-center gap-2">
             <LogoMark size={32} />
-            <span className="font-display text-lg font-semibold">Govt <span className="text-brand">Saathi</span></span>
+            <span className="font-display text-lg font-semibold">MAAP<span className="text-brand">SETU</span></span>
           </Link>
         </header>
 

@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/utils";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Verification history — Govt Saathi" };
+export const metadata = { title: "Verification history — MAAPSETU" };
 
 export default async function OfficerHistory() {
   const profile = await requireRole(["officer", "gatc"]);

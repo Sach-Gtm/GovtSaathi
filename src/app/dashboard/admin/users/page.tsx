@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { RoleManager, RequestActions, roleBadgeVariant } from "./RoleManager";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Users & access — Govt Saathi" };
+export const metadata = { title: "Users & access — MAAPSETU" };
 
 export default async function AdminUsers() {
   const me = await requireRole(["admin"]);

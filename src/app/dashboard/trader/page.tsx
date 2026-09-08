@@ -7,7 +7,7 @@ import { StatTile } from "@/components/ui/StatTile";
 import { formatDate, greeting } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My applications — Govt Saathi" };
+export const metadata = { title: "My applications — MAAPSETU" };
 
 interface AppRow {
   id: string;

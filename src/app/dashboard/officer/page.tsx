@@ -9,7 +9,7 @@ import { formatDate, greeting, minutesToLabel } from "@/lib/utils";
 import { OfflineIndicator } from "./OfflineIndicator";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "My day — Govt Saathi" };
+export const metadata = { title: "My day — MAAPSETU" };
 
 export default async function OfficerHome() {
   const profile = await requireRole(["officer", "gatc"]);

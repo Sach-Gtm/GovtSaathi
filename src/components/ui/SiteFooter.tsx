@@ -8,7 +8,7 @@ export function SiteFooter() {
       <div className="container-app grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         {/* Brand */}
         <div>
-          <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
+          <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/60">
             The online way to check that weighing and measuring instruments used in trade are verified
             under the Legal Metrology Act.
@@ -56,7 +56,7 @@ export function SiteFooter() {
 
       <div className="border-t border-border">
         <div className="container-app flex flex-col gap-2 py-5 text-xs text-ink/50 sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Govt Saathi · Team Codebit. A hackathon prototype, not an official government portal.</span>
+          <span>© {new Date().getFullYear()} MAAPSETU · Team GovtSaathi. A hackathon prototype, not an official government portal.</span>
           <span>Made in India 🇮🇳</span>
         </div>
       </div>

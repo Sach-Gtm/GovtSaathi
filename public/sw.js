@@ -1,4 +1,4 @@
-// Govt Saathi service worker
+// MAAPSETU service worker
 // Minimal shell caching so the app is installable and opens fast on repeat visits.
 // Runtime data (Supabase, API routes) is always network-first.
 

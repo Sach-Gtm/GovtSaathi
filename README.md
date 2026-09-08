@@ -1,6 +1,6 @@
-# GovtSathi
+# MAAPSETU
 
-Online verification and certification system for weighing and measuring instruments under India's Legal Metrology Act, 2009. Built for **Smart India Hackathon 2026 — SIH26036 (Department of Consumer Affairs)** by Team Codebit.
+Online verification and certification system for weighing and measuring instruments under India's Legal Metrology Act, 2009. Built for **Smart India Hackathon 2026 — SIH26036 (Department of Consumer Affairs)** by Team GovtSaathi.
 
 Traders, Legal Metrology Officers, Government Approved Test Centres (GATCs), allocators and citizens on one traceable rail.
 
@@ -122,4 +122,4 @@ RLS enforces all of the above at the database, not just the UI.
 
 ## Attribution
 
-Team Codebit · Smart India Hackathon 2026 · SIH26036 · Department of Consumer Affairs, Government of India.
+Team GovtSaathi · Smart India Hackathon 2026 · SIH26036 · Department of Consumer Affairs, Government of India.

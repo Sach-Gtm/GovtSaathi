@@ -2,7 +2,7 @@
   "name": "govtsaathi",
   "version": "0.1.0",
   "private": true,
-  "description": "GovtSathi — Online Verification System for Weighing and Measuring Instruments. SIH 2026 (SIH26036).",
+  "description": "MAAPSETU — Online Verification System for Weighing and Measuring Instruments. SIH 2026 (SIH26036).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

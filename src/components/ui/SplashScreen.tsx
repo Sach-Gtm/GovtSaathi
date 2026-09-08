@@ -58,7 +58,7 @@ export function SplashScreen() {
           <LogoMark size={128} />
         </div>
         <div className="splash-word text-2xl sm:text-3xl font-display font-semibold tracking-tight">
-          <span className="text-ink">Govt</span> <span className="text-brand">Saathi</span>
+          <span className="text-ink">MAAP</span><span className="text-brand">SETU</span>
         </div>
         <div className="splash-tag mt-1 text-xs uppercase tracking-[0.24em] text-ink/50">
           Verified · Signed · Traceable

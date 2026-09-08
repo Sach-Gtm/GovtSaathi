@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { ComplaintRow } from "./ComplaintRow";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Watchlist — Govt Saathi" };
+export const metadata = { title: "Watchlist — MAAPSETU" };
 
 export default async function Watchlist() {
   await requireRole(["officer", "gatc", "allocator", "admin"]);

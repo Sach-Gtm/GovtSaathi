@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { RequestAccess } from "@/components/dashboard/RequestAccess";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Dashboard — Govt Saathi" };
+export const metadata = { title: "Dashboard — MAAPSETU" };
 
 export default async function CitizenHome() {
   const profile = await requireProfile();

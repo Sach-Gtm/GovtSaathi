@@ -8,7 +8,7 @@ import { minutesToLabel, formatDate } from "@/lib/utils";
 import { FieldMap, type MapPin } from "@/components/dashboard/FieldMap";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Field operations — Govt Saathi" };
+export const metadata = { title: "Field operations — MAAPSETU" };
 
 interface PlanRow {
   assignment_id: string;

@@ -47,7 +47,7 @@ export default async function LandingPage() {
             </h1>
             <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/75">
               By law, every scale, petrol pump, weighbridge and measure used in a shop has to be checked
-              by the government before it is used. Govt Saathi brings that whole process online, so a shop
+              by the government before it is used. MAAPSETU brings that whole process online, so a shop
               owner can apply in minutes, an officer can do the check on their phone, and any customer can
               confirm it in three seconds.
             </p>
@@ -118,7 +118,7 @@ export default async function LandingPage() {
           <p className="mt-4 text-lg leading-relaxed text-ink/70">
             Today all of this runs on paper. Applications on a form, scheduling on a phone call, readings
             in a register, certificates as printouts. Nobody can see the full picture, and the one person
-            the law is meant to protect, the customer, can see nothing at all. Govt Saathi fixes that.
+            the law is meant to protect, the customer, can see nothing at all. MAAPSETU fixes that.
           </p>
         </Reveal>
       </section>

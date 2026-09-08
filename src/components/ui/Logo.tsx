@@ -12,7 +12,7 @@ export function Logo({
       <LogoMark size={size} />
       {!compact && (
         <span className="font-display text-lg font-semibold tracking-tight leading-none">
-          <span className="text-ink">Govt</span> <span className="text-brand">Saathi</span>
+          <span className="text-ink">MAAP</span><span className="text-brand">SETU</span>
         </span>
       )}
     </span>

@@ -4,14 +4,14 @@ import { SplashScreen } from "@/components/ui/SplashScreen";
 import { RegisterSW } from "@/components/ui/RegisterSW";
 
 export const metadata: Metadata = {
-  title: "Govt Saathi — Online Verification of Weighing & Measuring Instruments",
+  title: "MAAPSETU — Online Verification of Weighing & Measuring Instruments",
   description:
-    "Govt Saathi is the online verification and certification system for weighing and measuring instruments under the Legal Metrology Act. Traders, officers, GATCs and citizens on one traceable rail.",
-  applicationName: "Govt Saathi",
+    "MAAPSETU is the online verification and certification system for weighing and measuring instruments under the Legal Metrology Act. Traders, officers, GATCs and citizens on one traceable rail.",
+  applicationName: "MAAPSETU",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Govt Saathi",
+    title: "MAAPSETU",
     statusBarStyle: "default"
   },
   icons: {

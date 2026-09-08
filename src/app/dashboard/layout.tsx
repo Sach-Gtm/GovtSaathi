@@ -43,7 +43,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="h-1 tricolor-bar" aria-hidden />
       <header className="border-b border-border bg-canvas">
         <div className="container-app flex items-center justify-between py-3">
-          <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
+          <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
           <div className="flex items-center gap-4 text-sm">
             <div className="hidden sm:block text-right">
               <div className="font-medium">{profile.full_name}</div>

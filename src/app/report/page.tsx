@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { ReportForm } from "./ReportForm";
 
-export const metadata = { title: "Report or complain — Govt Saathi" };
+export const metadata = { title: "Report or complain — MAAPSETU" };
 
 const VALID = ["bug", "service", "complaint"] as const;
 type Kind = (typeof VALID)[number];
@@ -14,7 +14,7 @@ export default function ReportPage({ searchParams }: { searchParams: { type?: st
     <main className="min-h-screen bg-paper">
       <div className="h-1 tricolor-bar" aria-hidden />
       <header className="container-app py-5">
-        <Link href="/" aria-label="Govt Saathi home"><Logo /></Link>
+        <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
       </header>
 
       <div className="container-app max-w-2xl pt-6 pb-20">

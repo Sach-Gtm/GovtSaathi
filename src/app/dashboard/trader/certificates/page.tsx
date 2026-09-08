@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Certificates — Govt Saathi" };
+export const metadata = { title: "Certificates — MAAPSETU" };
 
 export default async function TraderCertificates() {
   await requireRole(["trader"]);

@@ -12,7 +12,7 @@ export function LogoMark({
       height={size}
       className={className}
       role="img"
-      aria-label="Govt Saathi"
+      aria-label="MAAPSETU"
     >
       <defs>
         <linearGradient id="lmGold" x1="0" y1="0" x2="1" y2="1">
