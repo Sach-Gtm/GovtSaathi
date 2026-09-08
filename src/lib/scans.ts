@@ -7,18 +7,10 @@ import { createSupabaseServiceClient } from "./supabase/server";
  */
 export async function logCertificateScan(certificateNo: string, source = "web"): Promise<void> {
   try {
+    // Single insert — business_id is not needed (cert_scan_stats joins on
+    // certificate_no), so we skip the extra lookup and keep the page fast.
     const svc = createSupabaseServiceClient();
-    const { data: cert } = await svc
-      .from("certificates")
-      .select("business_id")
-      .eq("certificate_no", certificateNo)
-      .maybeSingle();
-    if (!cert) return;
-    await svc.from("certificate_scans").insert({
-      certificate_no: certificateNo,
-      business_id: cert.business_id,
-      source
-    });
+    await svc.from("certificate_scans").insert({ certificate_no: certificateNo, source });
   } catch {
     // Never let scan logging break the public page.
   }
