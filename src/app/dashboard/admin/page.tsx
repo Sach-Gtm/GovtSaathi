@@ -3,11 +3,18 @@ import { requireRole } from "@/lib/rbac";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatDate, greeting } from "@/lib/utils";
 import { StatTile } from "@/components/ui/StatTile";
-import { BarChart, HBar } from "@/components/ui/Charts";
-import { Badge, statusBadge } from "@/components/ui/Badge";
+import { BarChart, HBar, ProgressRing } from "@/components/ui/Charts";
+import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Overview — MAAPSETU" };
+
+const ic = {
+  file: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /></svg>,
+  clock: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.7" /><path d="M12 8v4l3 2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>,
+  check: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+  alert: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /><path d="M12 10v4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+};
 
 export default async function AdminHome() {
   const profile = await requireRole(["admin"]);
@@ -15,15 +22,7 @@ export default async function AdminHome() {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const [
-    total,
-    submitted,
-    assigned,
-    verified,
-    overdue,
-    officers,
-    todayVisits
-  ] = await Promise.all([
+  const [total, submitted, assigned, verified, overdue, officers, todayVisits] = await Promise.all([
     supabase.from("applications").select("id", { count: "exact", head: true }),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "submitted"),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "assigned"),
@@ -33,22 +32,18 @@ export default async function AdminHome() {
     supabase.from("assignments").select("id", { count: "exact", head: true }).eq("scheduled_for", today)
   ]);
 
-  // Status breakdown for the bar chart
   const statuses = ["submitted", "assigned", "in_verification", "verified", "rejected"];
   const counts = await Promise.all(
-    statuses.map((s) =>
-      supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", s)
-    )
+    statuses.map((s) => supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", s))
   );
   const statusData = [
-    { label: "New", value: counts[0].count ?? 0, color: "#0B5FFF" },
-    { label: "Assigned", value: counts[1].count ?? 0, color: "#8B5CF6" },
-    { label: "In progress", value: counts[2].count ?? 0, color: "#E37400" },
-    { label: "Verified", value: counts[3].count ?? 0, color: "#0F9D58" },
+    { label: "New", value: counts[0].count ?? 0, color: "#0B2E6F" },
+    { label: "Assigned", value: counts[1].count ?? 0, color: "#0F766E" },
+    { label: "In progress", value: counts[2].count ?? 0, color: "#C25E00" },
+    { label: "Verified", value: counts[3].count ?? 0, color: "#0E7A4B" },
     { label: "Rejected", value: counts[4].count ?? 0, color: "#D14343" }
   ];
 
-  // State-wise pendency
   const { data: stateRows } = await supabase
     .from("applications")
     .select("state_code, status")
@@ -67,25 +62,47 @@ export default async function AdminHome() {
     .order("issued_on", { ascending: false })
     .limit(6);
 
+  const totalN = total.count ?? 0;
+  const verifiedN = verified.count ?? 0;
+  const coverage = totalN > 0 ? Math.round((verifiedN / totalN) * 100) : 0;
+  const longDate = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
   return (
-    <div className="space-y-8">
-      {/* Greeting */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-semibold">{greeting(profile.full_name)}</h1>
-          <p className="mt-1 text-ink/70">Here is where things stand across the department right now.</p>
+    <div className="space-y-6">
+      {/* Government banner header */}
+      <div className="relative overflow-hidden rounded-2xl gov-band p-6 text-white shadow-band sm:p-7">
+        <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
+        <div className="relative flex flex-wrap items-center justify-between gap-5">
+          <div>
+            <div className="text-xs font-medium uppercase tracking-widest text-white/60">{longDate}</div>
+            <h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{greeting(profile.full_name)}</h1>
+            <p className="mt-1 max-w-xl text-sm text-white/75">
+              Here is where things stand across the department right now.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              <Link href="/dashboard/admin/field-ops" className="btn-accent">Live field operations →</Link>
+              <Link href="/dashboard/admin/audit" className="btn-outline border-white/30 bg-white/5 text-white hover:bg-white/10">Audit log</Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 backdrop-blur">
+            <ProgressRing value={coverage} size={92} stroke={9} color="#3DD68C" label={`${coverage}%`} sublabel="verified" />
+            <div className="text-sm">
+              <div className="font-semibold text-white">Verification coverage</div>
+              <div className="mt-0.5 text-white/60">{verifiedN.toLocaleString("en-IN")} of {totalN.toLocaleString("en-IN")}</div>
+              <div className="mt-2 flex items-center gap-1.5 text-xs text-white/70">
+                <span className="h-2 w-2 rounded-full bg-[#3DD68C]" /> live from the ledger
+              </div>
+            </div>
+          </div>
         </div>
-        <Link href="/dashboard/admin/field-ops" className="btn-primary">
-          Live field operations →
-        </Link>
       </div>
 
       {/* KPI tiles */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label="Applications" value={(total.count ?? 0).toLocaleString("en-IN")} accent="#0B5FFF" hint="all time" />
-        <StatTile label="Waiting to assign" value={(submitted.count ?? 0).toLocaleString("en-IN")} accent="#E37400" hint="need an officer" />
-        <StatTile label="Verified" value={(verified.count ?? 0).toLocaleString("en-IN")} accent="#0F9D58" hint="certificate issued" />
-        <StatTile label="Overdue instruments" value={(overdue.count ?? 0).toLocaleString("en-IN")} accent="#D14343" hint="past re-check date" />
+        <StatTile label="Applications" value={totalN.toLocaleString("en-IN")} accent="#0B2E6F" hint="all time" icon={ic.file} />
+        <StatTile label="Waiting to assign" value={(submitted.count ?? 0).toLocaleString("en-IN")} accent="#C25E00" hint="need an officer" icon={ic.clock} />
+        <StatTile label="Verified" value={verifiedN.toLocaleString("en-IN")} accent="#0E7A4B" hint="certificate issued" icon={ic.check} />
+        <StatTile label="Overdue instruments" value={(overdue.count ?? 0).toLocaleString("en-IN")} accent="#D14343" hint="past re-check date" icon={ic.alert} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -99,22 +116,18 @@ export default async function AdminHome() {
         {/* Field today */}
         <div className="card p-6">
           <div className="mb-4 font-display text-lg font-semibold">Today, in the field</div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink/70">Visits scheduled</span>
-              <span className="font-display text-xl font-semibold">{todayVisits.count ?? 0}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink/70">Officers on duty</span>
-              <span className="font-display text-xl font-semibold">{officers.count ?? 0}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink/70">Assigned, not started</span>
-              <span className="font-display text-xl font-semibold">{assigned.count ?? 0}</span>
-            </div>
-            <Link href="/dashboard/admin/field-ops" className="btn-outline w-full justify-center mt-2">
-              Open the live map
-            </Link>
+          <div className="space-y-3.5">
+            {[
+              { k: "Visits scheduled", v: todayVisits.count ?? 0 },
+              { k: "Officers on duty", v: officers.count ?? 0 },
+              { k: "Assigned, not started", v: assigned.count ?? 0 }
+            ].map((r) => (
+              <div key={r.k} className="flex items-center justify-between border-b border-border pb-3 last:border-0 last:pb-0">
+                <span className="text-sm text-ink/70">{r.k}</span>
+                <span className="font-display text-xl font-semibold tabular-nums text-brand">{r.v}</span>
+              </div>
+            ))}
+            <Link href="/dashboard/admin/field-ops" className="btn-outline mt-1 w-full justify-center">Open the live map</Link>
           </div>
         </div>
       </div>

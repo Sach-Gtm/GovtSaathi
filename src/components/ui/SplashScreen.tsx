@@ -33,11 +33,11 @@ export function SplashScreen() {
     }
 
     setPhase("enter");
-    const t1 = setTimeout(() => setPhase("leaving"), 750);
+    const t1 = setTimeout(() => setPhase("leaving"), 600);
     const t2 = setTimeout(() => {
       try { sessionStorage.setItem("govtsaathi:splash", "1"); } catch {}
       setPhase("done");
-    }, 1100);
+    }, 950);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -58,7 +58,7 @@ export function SplashScreen() {
           <LogoMark size={128} />
         </div>
         <div className="splash-word text-2xl sm:text-3xl font-display font-semibold tracking-tight">
-          <span className="text-ink">MAAP</span><span className="text-brand">SETU</span>
+          <span className="text-ink">MAAP</span><span className="text-accent">SETU</span>
         </div>
         <div className="splash-tag mt-1 text-xs uppercase tracking-[0.24em] text-ink/50">
           Verified · Signed · Traceable

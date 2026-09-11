@@ -47,10 +47,9 @@ export default async function VerifyResult({ params }: { params: { cert: string 
   const valid = row && !row.revoked && new Date(row.valid_until) >= now && row.outcome !== "fail";
 
   return (
-    <main className="min-h-screen bg-paper">
-      <div className="h-1 tricolor-bar" aria-hidden />
-      <header className="container-app py-5">
-        <Link href="/"><Logo /></Link>
+    <main id="main" className="min-h-screen bg-paper">
+      <header className="container-app py-4">
+        <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
       </header>
 
       <div className="container-app max-w-2xl pt-6 pb-16">

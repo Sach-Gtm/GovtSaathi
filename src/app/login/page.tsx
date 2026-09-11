@@ -11,7 +11,7 @@ export default function LoginPage({
   searchParams: { next?: string; error?: string };
 }) {
   return (
-    <main className="min-h-screen bg-paper lg:grid lg:grid-cols-2">
+    <main id="main" className="min-h-screen bg-paper lg:grid lg:grid-cols-2">
       {/* Left — official brand panel */}
       <div className="relative hidden overflow-hidden bg-ink text-white lg:block">
         <div className="absolute inset-x-0 top-0 z-20 h-1 tricolor-bar" aria-hidden />
@@ -37,7 +37,7 @@ export default function LoginPage({
                 "Every certificate traceable back to the officer who signed it."
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3">
-                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent text-ink">
+                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent text-white">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
                   <span className="text-white/85">{t}</span>
@@ -60,7 +60,7 @@ export default function LoginPage({
         <header className="p-6 lg:hidden">
           <Link href="/" className="inline-flex items-center gap-2">
             <LogoMark size={32} />
-            <span className="font-display text-lg font-semibold">MAAP<span className="text-brand">SETU</span></span>
+            <span className="font-display text-lg font-semibold">MAAP<span className="text-accent">SETU</span></span>
           </Link>
         </header>
 

@@ -58,7 +58,7 @@ export default async function OfficerHome() {
 
       {/* Today summary */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label="Shops to visit today" value={todayJobs.length} accent="#0B5FFF" />
+        <StatTile label="Shops to visit today" value={todayJobs.length} accent="#0B2E6F" />
         <StatTile label="Instruments to check" value={totalInstruments} accent="#8B5CF6" />
         <StatTile
           label="Currently on site"

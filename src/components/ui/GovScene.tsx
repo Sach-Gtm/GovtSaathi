@@ -17,8 +17,8 @@ export function GovScene({ className }: { className?: string }) {
           <stop offset="1" stopColor="#111a2b" />
         </linearGradient>
         <radialGradient id="gvGlow" cx="0.5" cy="0.2" r="0.7">
-          <stop offset="0" stopColor="#F5C400" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#F5C400" stopOpacity="0" />
+          <stop offset="0" stopColor="#FF9933" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#FF9933" stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -63,7 +63,7 @@ export function GovScene({ className }: { className?: string }) {
 
       {/* Warm window lights */}
       {[[110,210],[150,210],[270,215],[330,215],[470,210],[510,210],[60,215],[560,215]].map(([x,y],i)=>(
-        <rect key={i} x={x} y={y} width="6" height="10" fill="#F5C400" opacity="0.7" />
+        <rect key={i} x={x} y={y} width="6" height="10" fill="#FF9933" opacity="0.7" />
       ))}
     </svg>
   );

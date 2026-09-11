@@ -42,7 +42,7 @@ export default async function AdminUsers() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="Officers & GATCs" value={(counts.officer ?? 0) + (counts.gatc ?? 0)} accent="#0F9D58" />
         <StatTile label="Allocators" value={counts.allocator ?? 0} accent="#E37400" />
-        <StatTile label="Shop owners" value={counts.trader ?? 0} accent="#0B5FFF" />
+        <StatTile label="Shop owners" value={counts.trader ?? 0} accent="#0B2E6F" />
         <StatTile label="Pending requests" value={pending.length} accent="#D14343" />
       </div>
 

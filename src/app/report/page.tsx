@@ -11,9 +11,8 @@ export default function ReportPage({ searchParams }: { searchParams: { type?: st
   const type: Kind = (VALID.includes(searchParams.type as Kind) ? searchParams.type : "complaint") as Kind;
 
   return (
-    <main className="min-h-screen bg-paper">
-      <div className="h-1 tricolor-bar" aria-hidden />
-      <header className="container-app py-5">
+    <main id="main" className="min-h-screen bg-paper">
+      <header className="container-app py-4">
         <Link href="/" aria-label="MAAPSETU home"><Logo /></Link>
       </header>
 

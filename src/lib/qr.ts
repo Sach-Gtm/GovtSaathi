@@ -16,20 +16,23 @@ export interface CertQrPayload {
   url?: string;             // deep link fallback for online scanners
 }
 
+// Error-correction level "H" recovers ~30% of a damaged/faded/partially
+// obscured code, and a wider quiet zone helps cameras lock on quickly. High
+// contrast (near-black on white) is kept deliberately for scan reliability.
 export async function renderQrPng(text: string): Promise<Buffer> {
   return await QRCode.toBuffer(text, {
-    errorCorrectionLevel: "M",
-    margin: 1,
-    width: 512,
+    errorCorrectionLevel: "H",
+    margin: 3,
+    width: 640,
     color: { dark: "#0B1220", light: "#FFFFFF" }
   });
 }
 
 export async function renderQrDataUrl(text: string): Promise<string> {
   return await QRCode.toDataURL(text, {
-    errorCorrectionLevel: "M",
-    margin: 1,
-    width: 384,
+    errorCorrectionLevel: "H",
+    margin: 3,
+    width: 420,
     color: { dark: "#0B1220", light: "#FFFFFF" }
   });
 }

@@ -1,5 +1,6 @@
 /**
- * Lightweight, dependency-free SVG charts. Server-renderable — no client JS.
+ * Lightweight, dependency-free charts. Server-renderable — no client JS.
+ * Bars/rows animate in with pure CSS (grow-bar / grow-row).
  */
 
 export function ProgressRing({
@@ -7,7 +8,7 @@ export function ProgressRing({
   max = 100,
   size = 96,
   stroke = 10,
-  color = "#0B5FFF",
+  color = "#0E7A4B",
   label,
   sublabel
 }: {
@@ -25,7 +26,7 @@ export function ProgressRing({
   return (
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#E4E1D6" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#EDEAE0" strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -48,7 +49,7 @@ export function ProgressRing({
 
 export function BarChart({
   data,
-  height = 180,
+  height = 200,
   format
 }: {
   data: { label: string; value: number; color?: string }[];
@@ -56,28 +57,52 @@ export function BarChart({
   format?: (n: number) => string;
 }) {
   const max = Math.max(1, ...data.map((d) => d.value));
-  const barH = height - 34;
+  const plotH = height - 46;
+  // 4 light gridlines
+  const grid = [0.25, 0.5, 0.75, 1];
   return (
     <div className="w-full overflow-x-auto">
-      <div className="flex items-end gap-4" style={{ height, minWidth: data.length * 56 }}>
-        {data.map((d) => {
-          const h = Math.round((d.value / max) * barH);
-          return (
-            <div key={d.label} className="flex flex-1 flex-col items-center justify-end gap-2" style={{ minWidth: 40 }}>
-              <div className="text-xs font-semibold tabular-nums text-ink/70">
-                {format ? format(d.value) : d.value}
+      <div className="relative" style={{ minWidth: data.length * 64 }}>
+        {/* gridlines */}
+        <div className="absolute inset-x-0 top-0" style={{ height: plotH }} aria-hidden>
+          {grid.map((g) => (
+            <div
+              key={g}
+              className="absolute inset-x-0 border-t border-dashed border-border/70"
+              style={{ bottom: `${g * 100}%` }}
+            />
+          ))}
+        </div>
+        <div className="relative flex items-end gap-4" style={{ height: plotH }}>
+          {data.map((d, i) => {
+            const h = Math.round((d.value / max) * plotH);
+            return (
+              <div key={d.label} className="flex flex-1 flex-col items-center justify-end" style={{ minWidth: 44 }}>
+                <div className="mb-1.5 text-xs font-semibold tabular-nums text-ink/70">
+                  {format ? format(d.value) : d.value}
+                </div>
+                <div
+                  className="grow-bar w-full max-w-[44px] rounded-t-md"
+                  style={{
+                    height: Math.max(4, h),
+                    background: `linear-gradient(180deg, ${d.color ?? "#0B2E6F"}, ${d.color ?? "#0B2E6F"}cc)`,
+                    animationDelay: `${i * 80}ms`
+                  }}
+                  title={`${d.label}: ${d.value}`}
+                />
               </div>
-              <div
-                className="w-full max-w-[40px] rounded-t-md transition-all"
-                style={{ height: Math.max(4, h), background: d.color ?? "#0B5FFF" }}
-                title={`${d.label}: ${d.value}`}
-              />
-              <div className="w-full truncate text-center text-[11px] text-ink/60" title={d.label}>
-                {d.label}
-              </div>
+            );
+          })}
+        </div>
+        {/* baseline */}
+        <div className="mt-0 border-t border-border" />
+        <div className="flex gap-4">
+          {data.map((d) => (
+            <div key={d.label} className="flex-1 truncate pt-2 text-center text-[11px] text-ink/60" style={{ minWidth: 44 }} title={d.label}>
+              {d.label}
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -87,7 +112,7 @@ export function Sparkline({
   points,
   width = 120,
   height = 32,
-  color = "#0B5FFF"
+  color = "#0B2E6F"
 }: {
   points: number[];
   width?: number;
@@ -123,7 +148,7 @@ export function HBar({
   label,
   value,
   max,
-  color = "#0B5FFF",
+  color = "#0B2E6F",
   right
 }: {
   label: string;
@@ -136,11 +161,11 @@ export function HBar({
   return (
     <div>
       <div className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-ink/80">{label}</span>
+        <span className="font-medium text-ink/80">{label}</span>
         <span className="tabular-nums text-ink/60">{right ?? value}</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-canvas">
-        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
+      <div className="h-2.5 overflow-hidden rounded-full bg-paper">
+        <div className="grow-row h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
       </div>
     </div>
   );

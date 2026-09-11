@@ -4,7 +4,7 @@ export function StatTile({
   label,
   value,
   hint,
-  accent = "#0B5FFF",
+  accent = "#0B2E6F",
   icon,
   trend
 }: {
@@ -16,21 +16,26 @@ export function StatTile({
   trend?: { dir: "up" | "down" | "flat"; text: string };
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-canvas p-5 shadow-card">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-canvas p-5 shadow-card transition-transform hover:-translate-y-0.5">
+      {/* top accent keyline */}
+      <div className="absolute inset-x-0 top-0 h-1" style={{ background: accent }} aria-hidden />
       <div
-        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-60 blur-2xl"
-        style={{ background: `radial-gradient(circle, ${accent}33, transparent 70%)` }}
+        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-50 blur-2xl transition-opacity group-hover:opacity-80"
+        style={{ background: `radial-gradient(circle, ${accent}40, transparent 70%)` }}
         aria-hidden
       />
-      <div className="relative flex items-start justify-between">
+      <div className="relative flex items-start justify-between gap-3">
         <div className="text-sm text-ink/60">{label}</div>
-        {icon && (
-          <div className="grid h-8 w-8 place-items-center rounded-lg" style={{ backgroundColor: `${accent}1a`, color: accent }}>
-            {icon}
-          </div>
-        )}
+        <div
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"
+          style={{ backgroundColor: `${accent}1a`, color: accent }}
+        >
+          {icon ?? <DefaultDot />}
+        </div>
       </div>
-      <div className="relative mt-2 font-display text-3xl font-semibold tabular-nums">{value}</div>
+      <div className="relative mt-2 font-display text-3xl font-semibold tabular-nums" style={{ color: accent }}>
+        {value}
+      </div>
       <div className="relative mt-1 flex items-center gap-2 text-xs">
         {trend && (
           <span
@@ -47,5 +52,14 @@ export function StatTile({
         {hint && <span className="text-ink/50">{hint}</span>}
       </div>
     </div>
+  );
+}
+
+function DefaultDot() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="2" />
+      <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+    </svg>
   );
 }

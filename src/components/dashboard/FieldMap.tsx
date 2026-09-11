@@ -10,7 +10,7 @@ export interface MapPin {
 }
 
 const STATUS_COLOR: Record<MapPin["status"], string> = {
-  planned: "#0B5FFF",
+  planned: "#0B2E6F",
   in_progress: "#E37400",
   done: "#0F9D58",
   missed: "#D14343"

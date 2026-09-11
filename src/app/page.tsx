@@ -15,56 +15,85 @@ import {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-paper">
-      <div className="h-1 tricolor-bar" aria-hidden />
-
+    <main id="main" className="min-h-screen bg-paper">
       <LandingNav />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 grid-canvas opacity-70" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 noise" aria-hidden />
+      {/* ── Hero banner (government-style upper band) ────────────────── */}
+      <section className="relative overflow-hidden gov-band text-white">
+        <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 noise opacity-50" aria-hidden />
+        {/* faint rotating chakra */}
+        <svg className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 opacity-[0.08]" viewBox="0 0 200 200" aria-hidden>
+          <g className="gs-spin-slow" style={{ transformOrigin: "100px 100px" }}>
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" strokeWidth="1" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#fff" strokeWidth="1" />
+            {Array.from({ length: 24 }).map((_, i) => (
+              <line key={i} x1="100" y1="100" x2="100" y2="8" stroke="#fff" strokeWidth="1" transform={`rotate(${i * 15} 100 100)`} />
+            ))}
+          </g>
+        </svg>
 
-        <div className="container-app relative grid gap-12 py-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-24">
+        <div className="container-app relative grid gap-10 py-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-20">
           <div>
-            <div className="rise-in mb-5 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border border-ink/10 bg-canvas/70 px-3 py-1.5 text-xs font-medium backdrop-blur">
+            <div className="rise-in mb-5 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium backdrop-blur">
               <span className="inline-flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-accent" />
-                Smart India Hackathon 2026
+                Smart India Hackathon 2026 · SIH26036
               </span>
-              <span className="hidden text-ink/40 sm:inline">·</span>
-              <span className="text-ink/70">Dept. of Consumer Affairs</span>
             </div>
-            <h1 className="rise-in-delay-1 font-display text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
+
+            {/* English headline */}
+            <h1 className="t-en rise-in-delay-1 font-display text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
               Is that weighing scale
               <br />
               <RotatingHeadline phrases={HERO_PHRASES} />
             </h1>
-            <p className="rise-in-delay-2 mt-7 max-w-xl text-lg leading-relaxed text-ink/75">
-              By law, every scale, petrol pump, weighbridge and measure used in a shop has to be checked
-              by the government before it is used. MAAPSETU brings that whole process online, so a shop
-              owner can apply in minutes, an officer can do the check on their phone, and any customer can
-              confirm it in three seconds.
+            {/* Hindi headline */}
+            <h1 className="t-hi lang-hi rise-in-delay-1 font-display text-3xl font-semibold leading-[1.2] tracking-tight sm:text-4xl lg:text-5xl">
+              क्या वह तराज़ू
+              <br />
+              <span className="text-saffron">सच में सही है?</span>
+            </h1>
+
+            <p className="rise-in-delay-2 mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+              <span className="t-en">
+                By law, every scale, petrol pump, weighbridge and measure used in a shop must be checked by
+                the government before use. MAAPSETU brings that whole process online — a shopkeeper applies in
+                minutes, an officer verifies on their phone, and any customer confirms it in three seconds.
+              </span>
+              <span className="t-hi lang-hi">
+                कानून के अनुसार, दुकान में इस्तेमाल होने वाले हर तराज़ू, पेट्रोल पंप, धर्मकांटा और माप की सरकारी
+                जाँच ज़रूरी है। MAAPSETU इस पूरी प्रक्रिया को ऑनलाइन लाता है — दुकानदार मिनटों में आवेदन करे, अधिकारी
+                फ़ोन पर जाँच करे, और कोई भी ग्राहक तीन सेकंड में पुष्टि कर ले।
+              </span>
             </p>
+
             <div className="rise-in-delay-3 mt-8 flex flex-wrap gap-3">
-              <Link href="/register" className="btn-primary">
-                Get started
+              <Link href="/verify" className="btn-accent">
+                <span className="t-en">Check a certificate</span>
+                <span className="t-hi lang-hi">प्रमाणपत्र जाँचें</span>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="ml-1">
                   <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
-              <Link href="/verify" className="btn-outline">Check a certificate</Link>
+              <Link href="/register" className="btn-outline border-white/30 bg-white/5 text-white hover:border-white/60 hover:bg-white/10">
+                <span className="t-en">Register your shop</span>
+                <span className="t-hi lang-hi">अपनी दुकान पंजीकृत करें</span>
+              </Link>
             </div>
 
-            <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-ink/10 pt-6">
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-white/15 pt-6">
               {[
-                { k: "Free", u: "for anyone to check a scale" },
-                { k: "Works offline", u: "in basements and rural markets" },
-                { k: "3 seconds", u: "to confirm at the counter" }
+                { k: "Free", u: "for anyone to check a scale", h: "किसी के लिए भी मुफ़्त" },
+                { k: "Offline", u: "works in basements & mandis", h: "बिना नेटवर्क भी काम करे" },
+                { k: "3 sec", u: "to confirm at the counter", h: "काउंटर पर पुष्टि" }
               ].map((s) => (
                 <div key={s.u}>
-                  <div className="font-display text-xl font-semibold">{s.k}</div>
-                  <div className="mt-1 text-xs text-ink/60 leading-snug">{s.u}</div>
+                  <div className="font-display text-xl font-semibold text-white">{s.k}</div>
+                  <div className="mt-1 text-xs leading-snug text-white/60">
+                    <span className="t-en">{s.u}</span>
+                    <span className="t-hi lang-hi">{s.h}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -75,12 +104,15 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Instrument marquee — label fixed, track clipped in its own rail */}
-        <div className="border-y border-border bg-paper/80">
-          <div className="container-app flex items-center gap-4 py-4 text-sm text-ink/60">
-            <span className="shrink-0 font-medium text-ink/80">What gets checked</span>
-            <span className="h-4 w-px shrink-0 bg-border" />
-            <div className="marquee-rail">
+        {/* Instrument marquee */}
+        <div className="relative border-t border-white/10 bg-brand-dark/60 backdrop-blur">
+          <div className="container-app flex items-center gap-4 py-3.5 text-sm text-white/60">
+            <span className="shrink-0 font-medium text-white/85">
+              <span className="t-en">What gets checked</span>
+              <span className="t-hi lang-hi">क्या-क्या जाँचा जाता है</span>
+            </span>
+            <span className="h-4 w-px shrink-0 bg-white/20" />
+            <div className="marquee-rail" style={{ ["--paper" as any]: "#0a2350" }}>
               <div className="marquee gap-10">
                 {INSTRUMENTS.concat(INSTRUMENTS).map((t, i) => (
                   <span key={i} className="flex shrink-0 items-center gap-2 whitespace-nowrap">
@@ -94,27 +126,47 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* The problem */}
+      {/* ── The problem ─────────────────────────────────────────────── */}
       <section className="container-app py-20">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Why this matters</div>
+          <div className="eyebrow">
+            <span className="t-en">Why this matters</span>
+            <span className="t-hi lang-hi">यह क्यों ज़रूरी है</span>
+          </div>
           <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-            When a scale is wrong, the customer pays for it, every single day.
+            <span className="t-en">When a scale is wrong, the customer pays for it — every single day.</span>
+            <span className="t-hi lang-hi">जब तराज़ू ग़लत हो, तो हर दिन ग्राहक ही नुकसान उठाता है।</span>
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-ink/70">
-            Today all of this runs on paper. Applications on a form, scheduling on a phone call, readings
-            in a register, certificates as printouts. Nobody can see the full picture, and the one person
-            the law is meant to protect, the customer, can see nothing at all. MAAPSETU fixes that.
+            <span className="t-en">
+              Today all of this runs on paper. Applications on a form, scheduling on a phone call, readings in
+              a register, certificates as printouts. Nobody sees the full picture, and the one person the law
+              is meant to protect — the customer — sees nothing at all. MAAPSETU fixes that.
+            </span>
+            <span className="t-hi lang-hi">
+              आज यह सब कागज़ पर चलता है। फ़ॉर्म पर आवेदन, फ़ोन पर समय, रजिस्टर में रीडिंग, और प्रिंट किए हुए
+              प्रमाणपत्र। पूरी तस्वीर किसी को नहीं दिखती, और जिस ग्राहक की रक्षा कानून करना चाहता है, उसे कुछ नहीं
+              दिखता। MAAPSETU इसे ठीक करता है।
+            </span>
           </p>
         </Reveal>
       </section>
 
-      {/* Roles — flip cards */}
+      {/* ── Roles — flip cards ──────────────────────────────────────── */}
       <section className="container-app pb-20">
         <Reveal className="mb-10 text-center">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Who it is for</div>
-          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">One place, four people, everyone in the loop</h2>
-          <p className="mt-3 text-sm text-ink/60">Tap any card to see, in plain words, what it does.</p>
+          <div className="eyebrow">
+            <span className="t-en">Who it is for</span>
+            <span className="t-hi lang-hi">यह किसके लिए है</span>
+          </div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+            <span className="t-en">One place, four people, everyone in the loop</span>
+            <span className="t-hi lang-hi">एक जगह, चार भूमिकाएँ, सब एक साथ</span>
+          </h2>
+          <p className="mt-3 text-sm text-ink/60">
+            <span className="t-en">Tap any card to see, in plain words, what it does.</span>
+            <span className="t-hi lang-hi">विवरण देखने के लिए किसी भी कार्ड को छुएँ।</span>
+          </p>
         </Reveal>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {ROLES.map((r, i) => (
@@ -125,12 +177,18 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Workflow */}
+      {/* ── Workflow ────────────────────────────────────────────────── */}
       <section className="border-y border-border bg-canvas">
         <div className="container-app py-20">
           <Reveal className="mb-10 text-center">
-            <div className="text-sm font-semibold uppercase tracking-widest text-brand">How it works</div>
-            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Four simple steps</h2>
+            <div className="eyebrow">
+              <span className="t-en">How it works</span>
+              <span className="t-hi lang-hi">यह कैसे काम करता है</span>
+            </div>
+            <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+              <span className="t-en">Four simple steps</span>
+              <span className="t-hi lang-hi">चार आसान चरण</span>
+            </h2>
           </Reveal>
           <Reveal delay={120}>
             <WorkflowDiagram />
@@ -138,11 +196,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Trust points */}
-      <section className="container-app py-20">
+      {/* ── Trust points ────────────────────────────────────────────── */}
+      <section className="container-app cv-auto py-20">
         <Reveal className="mb-12 text-center">
-          <div className="text-sm font-semibold uppercase tracking-widest text-brand">Built to be trusted</div>
-          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">The things that make it real</h2>
+          <div className="eyebrow">
+            <span className="t-en">Built to be trusted</span>
+            <span className="t-hi lang-hi">भरोसे के लिए बना</span>
+          </div>
+          <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+            <span className="t-en">The things that make it real</span>
+            <span className="t-hi lang-hi">जो इसे असली बनाते हैं</span>
+          </h2>
         </Reveal>
         <div className="grid gap-5 lg:grid-cols-2">
           {FEATURES.map((f, i) => (
@@ -154,10 +218,16 @@ export default function LandingPage() {
                   aria-hidden
                 />
                 <div className="relative flex items-start gap-5">
-                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-ink text-white">{f.icon}</div>
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-brand text-white">{f.icon}</div>
                   <div>
-                    <div className="font-display text-xl font-semibold leading-snug">{f.title}</div>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/70">{f.body}</p>
+                    <div className="font-display text-xl font-semibold leading-snug">
+                      <span className="t-en">{f.title}</span>
+                      <span className="t-hi lang-hi">{f.titleHi}</span>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-ink/70">
+                      <span className="t-en">{f.body}</span>
+                      <span className="t-hi lang-hi">{f.bodyHi}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -166,33 +236,40 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="container-app pb-20">
+      {/* ── CTA ─────────────────────────────────────────────────────── */}
+      <section className="container-app cv-auto pb-20">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-ink text-white">
-            <div
-              className="pointer-events-none absolute inset-0 opacity-40"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 20% 30%, rgba(11,95,255,0.5), transparent 40%), radial-gradient(circle at 80% 70%, rgba(245,196,0,0.35), transparent 45%)"
-              }}
-              aria-hidden
-            />
+          <div className="relative overflow-hidden rounded-3xl gov-band text-white">
+            <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
             <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-accent">Anyone can do this</div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-saffron">
+                  <span className="t-en">Anyone can do this</span>
+                  <span className="t-hi lang-hi">कोई भी कर सकता है</span>
+                </div>
                 <h3 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-                  Point your phone at the sticker on a scale. See if it is really checked.
+                  <span className="t-en">Point your phone at the sticker on a scale. See if it is really checked.</span>
+                  <span className="t-hi lang-hi">तराज़ू पर लगे स्टिकर पर फ़ोन ले जाएँ। देखें कि वह सच में जाँचा गया है या नहीं।</span>
                 </h3>
-                <p className="mt-4 max-w-xl text-white/70">
-                  No account, no charge. And because the proof is stored inside the QR code itself, it even
-                  works when the shop has no internet.
+                <p className="mt-4 max-w-xl text-white/75">
+                  <span className="t-en">
+                    No account, no charge. The proof is stored inside the QR code itself, so it works even when
+                    the shop has no internet — or just tap your phone if the sticker supports NFC.
+                  </span>
+                  <span className="t-hi lang-hi">
+                    न खाता, न शुल्क। प्रमाण QR कोड में ही होता है, इसलिए दुकान में इंटरनेट न हो तो भी काम करता है —
+                    या स्टिकर पर NFC हो तो बस फ़ोन टैप करें।
+                  </span>
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-                <Link href="/verify" className="btn-accent w-full justify-center">Check a certificate</Link>
-                <Link href="/register" className="btn-outline w-full justify-center border-white/25 bg-transparent text-white hover:bg-white/5">
-                  I run a shop, register
+                <Link href="/verify" className="btn-accent w-full justify-center">
+                  <span className="t-en">Check a certificate</span>
+                  <span className="t-hi lang-hi">प्रमाणपत्र जाँचें</span>
+                </Link>
+                <Link href="/register" className="btn-outline w-full justify-center border-white/30 bg-transparent text-white hover:bg-white/10">
+                  <span className="t-en">I run a shop, register</span>
+                  <span className="t-hi lang-hi">मैं दुकान चलाता हूँ</span>
                 </Link>
               </div>
             </div>
@@ -205,13 +282,7 @@ export default function LandingPage() {
   );
 }
 
-const HERO_PHRASES = [
-  "actually honest?",
-  "cheating you?",
-  "short on weight?",
-  "giving you full value?",
-  "telling the truth?"
-];
+const HERO_PHRASES = ["actually honest?", "cheating you?", "short on weight?", "giving full value?", "telling the truth?"];
 
 const INSTRUMENTS = [
   "Shop weighing scales",
@@ -236,7 +307,7 @@ const ROLES = [
       "An officer visits, and you get a sticker with a QR code."
     ],
     icon: TraderIcon,
-    accent: "#0B5FFF"
+    accent: "#0B2E6F"
   },
   {
     tag: "Officer",
@@ -249,7 +320,7 @@ const ROLES = [
       "Sign it. A certificate is made, even without internet."
     ],
     icon: OfficerIcon,
-    accent: "#F5C400"
+    accent: "#0E7A4B"
   },
   {
     tag: "Department",
@@ -262,7 +333,7 @@ const ROLES = [
       "See which shops are overdue, by state and district."
     ],
     icon: AllocatorIcon,
-    accent: "#0F9D58"
+    accent: "#C25E00"
   },
   {
     tag: "Customer",
@@ -270,63 +341,73 @@ const ROLES = [
     body: "Scan the sticker. See if it is valid, and until when. Free, for anyone.",
     backTitle: "What you do here",
     steps: [
-      "Point your phone at the QR sticker on the scale.",
+      "Point your phone at the QR sticker on the scale, or tap it (NFC).",
       "See a clear pass or fail, and the valid-until date.",
       "It works even if the shop has no internet."
     ],
     icon: CitizenIcon,
-    accent: "#E37400"
+    accent: "#0F766E"
   }
 ];
 
 const FEATURES = [
   {
     title: "A sticker that can't be faked",
+    titleHi: "जो स्टिकर नकली नहीं हो सकता",
     body:
       "The QR code carries a digital signature. Scan a real one and it passes. Scan a copied or tampered one and it clearly fails, even with the internet switched off.",
-    tint: "radial-gradient(circle, rgba(11,95,255,0.35), transparent 60%)",
+    bodyHi:
+      "QR कोड में डिजिटल हस्ताक्षर होता है। असली को स्कैन करें तो पास, नकली या छेड़छाड़ किए हुए को स्कैन करें तो साफ़ फेल — इंटरनेट बंद हो तब भी।",
+    tint: "radial-gradient(circle, rgba(11,46,111,0.35), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M12 3 L20 6 V12 C20 17 16 20 12 21 C8 20 4 17 4 12 V6 Z" stroke="#F5C400" strokeWidth="1.7" strokeLinejoin="round" />
-        <path d="M8 12 L11 15 L16 9" stroke="#F5C400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d="M12 3 L20 6 V12 C20 17 16 20 12 21 C8 20 4 17 4 12 V6 Z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="M8 12 L11 15 L16 9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
     )
   },
   {
     title: "Works without a signal",
+    titleHi: "बिना नेटवर्क भी चले",
     body:
       "Officers work in basements, godowns and rural markets. The app keeps the day's work on the phone and uploads it the moment there is a connection again.",
-    tint: "radial-gradient(circle, rgba(245,196,0,0.30), transparent 60%)",
+    bodyHi:
+      "अधिकारी तहखानों, गोदामों और गाँव की मंडियों में काम करते हैं। ऐप दिन भर का काम फ़ोन में रखता है और नेटवर्क आते ही अपलोड कर देता है।",
+    tint: "radial-gradient(circle, rgba(14,122,75,0.32), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <rect x="6" y="3" width="12" height="18" rx="2" stroke="#F5C400" strokeWidth="1.7" />
-        <path d="M9 8 H15 M9 12 H15 M9 16 H13" stroke="#F5C400" strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="17" cy="17" r="4" fill="#F5C400" />
-        <path d="M15 17 L16.5 18.5 L19 16" stroke="#0B1220" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="6" y="3" width="12" height="18" rx="2" stroke="#fff" strokeWidth="1.7" />
+        <path d="M9 8 H15 M9 12 H15 M9 16 H13" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     )
   },
   {
     title: "Every visit is on the map",
+    titleHi: "हर दौरा नक्शे पर",
     body:
       "When an officer checks in at a shop, the time and location are recorded. The department can see who went where, how many shops are covered, and how long each check took.",
-    tint: "radial-gradient(circle, rgba(15,157,88,0.30), transparent 60%)",
+    bodyHi:
+      "जब अधिकारी दुकान पर पहुँचता है, तो समय और स्थान दर्ज होता है। विभाग देख सकता है कौन कहाँ गया, कितनी दुकानें हुईं, और हर जाँच में कितना समय लगा।",
+    tint: "radial-gradient(circle, rgba(255,153,51,0.28), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11Z" stroke="#F5C400" strokeWidth="1.7" />
-        <circle cx="12" cy="10" r="2.5" stroke="#F5C400" strokeWidth="1.7" />
+        <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11Z" stroke="#fff" strokeWidth="1.7" />
+        <circle cx="12" cy="10" r="2.5" stroke="#fff" strokeWidth="1.7" />
       </svg>
     )
   },
   {
     title: "Nothing gets lost",
+    titleHi: "कुछ भी न खोए",
     body:
       "Every important action is written to a permanent record. A shop that moves to another state keeps its history. A certificate can always be traced back to the officer who signed it.",
-    tint: "radial-gradient(circle, rgba(227,116,0,0.30), transparent 60%)",
+    bodyHi:
+      "हर ज़रूरी कार्रवाई स्थायी रिकॉर्ड में लिखी जाती है। दूसरे राज्य में गई दुकान का इतिहास बना रहता है। हर प्रमाणपत्र उस अधिकारी तक पहुँचाया जा सकता है जिसने उसे हस्ताक्षरित किया।",
+    tint: "radial-gradient(circle, rgba(15,118,110,0.28), transparent 60%)",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <rect x="4" y="3" width="16" height="18" rx="2" stroke="#F5C400" strokeWidth="1.7" />
-        <path d="M7 8 H17 M7 12 H17 M7 16 H12" stroke="#F5C400" strokeWidth="1.5" strokeLinecap="round" />
+        <rect x="4" y="3" width="16" height="18" rx="2" stroke="#fff" strokeWidth="1.7" />
+        <path d="M7 8 H17 M7 12 H17 M7 16 H12" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     )
   }

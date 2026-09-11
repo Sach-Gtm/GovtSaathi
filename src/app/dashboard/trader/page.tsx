@@ -47,7 +47,7 @@ export default async function TraderApplications() {
 
       {apps.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-3">
-          <StatTile label="Requests filed" value={apps.length} accent="#0B5FFF" />
+          <StatTile label="Requests filed" value={apps.length} accent="#0B2E6F" />
           <StatTile label="Being checked" value={inProgress} accent="#E37400" hint="with an officer" />
           <StatTile label="Verified" value={verified} accent="#0F9D58" hint="certificate ready" />
         </div>

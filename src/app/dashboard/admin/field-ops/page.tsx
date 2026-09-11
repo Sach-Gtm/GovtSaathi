@@ -84,7 +84,7 @@ export default async function FieldOps() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label="Officers on duty" value={activeOfficers} accent="#0B5FFF" />
+        <StatTile label="Officers on duty" value={activeOfficers} accent="#0B2E6F" />
         <StatTile label="Shops planned" value={totalPlanned} accent="#8B5CF6" />
         <StatTile label="Visited so far" value={totalDone} accent="#0F9D58" hint={`${totalPlanned - totalDone} to go`} />
         <StatTile label="Avg time per shop" value={minutesToLabel(avgMins)} accent="#E37400" />
@@ -100,7 +100,7 @@ export default async function FieldOps() {
           {/* Map */}
           <div>
             <div className="mb-3 flex items-center gap-4 text-xs text-ink/60">
-              <span className="inline-flex items-center gap-1.5"><Dot c="#0B5FFF" /> Planned</span>
+              <span className="inline-flex items-center gap-1.5"><Dot c="#0B2E6F" /> Planned</span>
               <span className="inline-flex items-center gap-1.5"><Dot c="#E37400" /> On site now</span>
               <span className="inline-flex items-center gap-1.5"><Dot c="#0F9D58" /> Done</span>
             </div>

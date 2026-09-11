@@ -6,6 +6,7 @@ import { getDeviceId, offlineDB } from "@/lib/offline/db";
 import { drainSyncQueue } from "@/lib/offline/sync";
 import { Field } from "@/components/ui/Field";
 import { Badge } from "@/components/ui/Badge";
+import { CameraCapture, type CaptureMeta } from "@/components/verify/CameraCapture";
 import { OfflineIndicator } from "../../OfflineIndicator";
 
 interface Instrument {
@@ -50,6 +51,8 @@ interface Row {
   tolerance_ok: boolean | null;
   observations: string;
   photos: File[];
+  captureLat: number | null;
+  captureLng: number | null;
   status: "pending" | "queued" | "synced";
 }
 
@@ -62,6 +65,8 @@ function blank(instrument_id: string): Row {
     tolerance_ok: null,
     observations: "",
     photos: [],
+    captureLat: null,
+    captureLng: null,
     status: "pending"
   };
 }
@@ -146,6 +151,23 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
       prev.map((r, i) => (i === idx ? { ...r, observed_values: { ...r.observed_values, [k]: v } } : r))
     );
   }
+  function addPhoto(idx: number, file: File, meta: CaptureMeta) {
+    setRows((prev) =>
+      prev.map((r, i) =>
+        i === idx
+          ? {
+              ...r,
+              photos: [...r.photos, file],
+              captureLat: meta.lat ?? r.captureLat,
+              captureLng: meta.lng ?? r.captureLng
+            }
+          : r
+      )
+    );
+  }
+  function removePhoto(idx: number, p: number) {
+    setRows((prev) => prev.map((r, i) => (i === idx ? { ...r, photos: r.photos.filter((_, j) => j !== p) } : r)));
+  }
 
   async function queueRow(idx: number) {
     const r = rows[idx];
@@ -162,8 +184,8 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
       observed_values: r.observed_values as any,
       tolerance_ok: r.tolerance_ok,
       observations: r.observations || null,
-      location_lat: null,
-      location_lng: null,
+      location_lat: r.captureLat,
+      location_lng: r.captureLng,
       photo_blobs: r.photos,
       performed_at: new Date().toISOString(),
       device_id: getDeviceId(),
@@ -309,11 +331,43 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
                   placeholder="Anything the record should reflect — condition, sealing, prior tampering…" />
               </Field>
 
-              <Field label="Photos" className="mt-3">
-                <input type="file" multiple accept="image/*" capture="environment"
-                  onChange={(e) => setRow(idx, { photos: Array.from(e.target.files ?? []) })} />
+              <Field label="On-site photos" className="mt-3">
+                <CameraCapture
+                  count={r.photos.length}
+                  context={{
+                    appNo: assignment.application.application_no,
+                    place:
+                      assignment.application.business.trade_name ??
+                      assignment.application.business.legal_name
+                  }}
+                  onCapture={(file, meta) => addPhoto(idx, file, meta)}
+                />
                 {r.photos.length > 0 && (
-                  <div className="mt-2 text-xs text-ink/60">{r.photos.length} photo{r.photos.length !== 1 && "s"} attached</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {r.photos.map((p, pi) => (
+                      <div key={pi} className="relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={URL.createObjectURL(p)}
+                          alt={`Capture ${pi + 1}`}
+                          className="h-20 w-20 rounded-lg border border-border object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(idx, pi)}
+                          aria-label="Remove photo"
+                          className="absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full bg-danger text-xs text-white"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {r.captureLat != null && (
+                  <div className="mt-2 text-xs text-ink/50">
+                    Stamped at {r.captureLat.toFixed(4)}, {r.captureLng?.toFixed(4)}
+                  </div>
                 )}
               </Field>
 

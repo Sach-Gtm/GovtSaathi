@@ -37,8 +37,8 @@ export function RotatingHeadline({ phrases, holdMs = 2600 }: { phrases: string[]
       key={i}
       className={`relative inline-block ${!reduced ? (phase === "out" ? "rot-exit" : "rot-enter") : ""}`}
     >
-      <span className="text-brand">{phrases[i]}</span>
-      <span className="absolute inset-x-0 -bottom-1 h-2 rounded-full bg-accent/60 sm:-bottom-2" aria-hidden />
+      <span className="text-saffron">{phrases[i]}</span>
+      <span className="absolute inset-x-0 -bottom-1 h-2 rounded-full bg-accent/70 sm:-bottom-2" aria-hidden />
     </span>
   );
 }

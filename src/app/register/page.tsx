@@ -6,9 +6,8 @@ export const metadata = { title: "Register — MAAPSETU" };
 
 export default function RegisterPage() {
   return (
-    <main className="min-h-screen bg-paper">
-      <div className="h-1 tricolor-bar" aria-hidden />
-      <header className="container-app py-5"><Logo /></header>
+    <main id="main" className="min-h-screen bg-paper">
+      <header className="container-app py-4"><Link href="/" aria-label="MAAPSETU home"><Logo /></Link></header>
       <div className="container-app grid items-start gap-10 pt-10 lg:grid-cols-2 lg:pt-16">
         <div className="max-w-md">
           <h1 className="text-4xl font-display font-semibold">Create an account</h1>
