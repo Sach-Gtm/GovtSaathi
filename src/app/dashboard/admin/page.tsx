@@ -82,6 +82,7 @@ export default async function AdminHome() {
             <div className="mt-4 flex flex-wrap gap-2.5">
               <Link href="/dashboard/admin/field-ops" className="btn-accent">Live field operations →</Link>
               <Link href="/dashboard/admin/audit" className="btn-outline border-white/30 bg-white/5 text-white hover:bg-white/10">Audit log</Link>
+              <a href="/api/export/pendency" className="btn-outline border-white/30 bg-white/5 text-white hover:bg-white/10">Export pendency CSV</a>
             </div>
           </div>
           <div className="flex items-center gap-4 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 backdrop-blur">

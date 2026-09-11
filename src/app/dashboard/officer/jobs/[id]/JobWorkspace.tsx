@@ -91,6 +91,12 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
         .from("assignments")
         .update({ check_in_at: now, check_in_lat: lat, check_in_lng: lng })
         .eq("id", assignment.id);
+      // Advance the application into the in_verification stage (no-op if already past it)
+      await supabase
+        .from("applications")
+        .update({ status: "in_verification" })
+        .eq("id", assignment.application.id)
+        .eq("status", "assigned");
       // Tag the shop's location too, if we have a fix and it has none yet
       if (lat != null && lng != null) {
         setGeo({ lat, lng });

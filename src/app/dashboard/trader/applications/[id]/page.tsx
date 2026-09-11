@@ -4,6 +4,10 @@ import { requireRole } from "@/lib/rbac";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 import { formatDate, formatDateTime } from "@/lib/utils";
+import { WorkflowTimeline } from "@/components/dashboard/WorkflowTimeline";
+import { DocumentUpload } from "@/components/dashboard/DocumentUpload";
+import { listDocuments } from "@/lib/documents";
+import { formatBytes } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +31,7 @@ export default async function ApplicationDetail({ params }: { params: { id: stri
 
   const { data: assignments } = await supabase
     .from("assignments")
-    .select("id, scheduled_for, accepted_at, completed_at, assignee:profiles(full_name, role, employee_code)")
+    .select("id, scheduled_for, created_at, accepted_at, check_in_at, completed_at, assignee:profiles(full_name, role, employee_code)")
     .eq("application_id", params.id)
     .order("created_at", { ascending: false });
 
@@ -38,6 +42,7 @@ export default async function ApplicationDetail({ params }: { params: { id: stri
     .in("instrument_id", (app.application_instruments as any[]).map((r) => r.instrument.id));
 
   const business: any = app.business;
+  const documents = await listDocuments("application", app.id as string);
 
   return (
     <div className="space-y-6">
@@ -51,6 +56,13 @@ export default async function ApplicationDetail({ params }: { params: { id: stri
         </div>
         <Badge variant={statusBadge(app.status)}>{app.status.replace("_", " ")}</Badge>
       </div>
+
+      <WorkflowTimeline
+        status={app.status}
+        submittedAt={app.submitted_at ?? app.created_at}
+        assignment={(assignments as any[])?.[0] ?? null}
+        certificate={(certificates as any[])?.[0] ? { id: (certificates as any[])[0].id, certificate_no: (certificates as any[])[0].certificate_no } : null}
+      />
 
       <section className="card p-6">
         <div className="font-display text-lg font-semibold">Instruments in scope</div>
@@ -69,6 +81,35 @@ export default async function ApplicationDetail({ params }: { params: { id: stri
             );
           })}
         </ul>
+      </section>
+
+      <section className="card p-6">
+        <div className="flex items-center justify-between gap-3">
+          <div className="font-display text-lg font-semibold">Supporting documents</div>
+          <DocumentUpload entityType="application" entityId={app.id as string} />
+        </div>
+        {documents.length === 0 ? (
+          <p className="mt-2 text-sm text-ink/60">
+            Attach GSTIN proof, ID, prior certificates, purchase invoices or calibration papers. PDF or image.
+          </p>
+        ) : (
+          <ul className="mt-3 divide-y divide-border">
+            {documents.map((d) => (
+              <li key={d.id} className="flex items-center justify-between py-2.5 text-sm">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-soft text-brand">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /></svg>
+                  </span>
+                  <div>
+                    <div className="font-medium">{d.file_name ?? "Document"}</div>
+                    <div className="text-xs text-ink/50">{d.doc_type} · {formatBytes(d.size_bytes)} · {formatDate(d.created_at)}</div>
+                  </div>
+                </div>
+                {d.url && <a href={d.url} target="_blank" rel="noreferrer" className="text-brand font-medium">Open →</a>}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="card p-6">
@@ -113,7 +154,7 @@ export default async function ApplicationDetail({ params }: { params: { id: stri
                 </div>
                 <div className="text-right">
                   <div className="text-xs text-ink/60">Valid until {formatDate(c.valid_until)}</div>
-                  <Link href={`/verify/${encodeURIComponent(c.certificate_no)}`} className="text-brand text-sm font-medium">Open →</Link>
+                  <Link href={`/dashboard/certificate/${c.id}`} className="text-brand text-sm font-medium">Certificate →</Link>
                 </div>
               </li>
             ))}

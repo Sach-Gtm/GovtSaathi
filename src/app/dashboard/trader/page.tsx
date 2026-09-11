@@ -4,7 +4,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Badge, statusBadge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { StatTile } from "@/components/ui/StatTile";
-import { formatDate, greeting } from "@/lib/utils";
+import { formatDate, greeting, dueState, dueLabel } from "@/lib/utils";
+import { ReverifyButton } from "@/components/dashboard/ReverifyButton";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My applications — MAAPSETU" };
@@ -32,6 +33,11 @@ export default async function TraderApplications() {
   const inProgress = apps.filter((a) => ["submitted", "assigned", "in_verification"].includes(a.status)).length;
   const verified = apps.filter((a) => a.status === "verified").length;
 
+  const { data: instrData } = await supabase
+    .from("instruments")
+    .select("id, category, serial_no, capacity, next_due_on, business:businesses(id, legal_name, trade_name, state_code)");
+  const reminders = (instrData ?? []).filter((i: any) => ["overdue", "due_soon"].includes(dueState(i.next_due_on)));
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -46,11 +52,37 @@ export default async function TraderApplications() {
       </div>
 
       {apps.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-4">
           <StatTile label="Requests filed" value={apps.length} accent="#0B2E6F" />
           <StatTile label="Being checked" value={inProgress} accent="#E37400" hint="with an officer" />
           <StatTile label="Verified" value={verified} accent="#0F9D58" hint="certificate ready" />
+          <StatTile label="Due for re-verification" value={reminders.length} accent="#D14343" hint="overdue or ≤30 days" />
         </div>
+      )}
+
+      {reminders.length > 0 && (
+        <section className="overflow-hidden rounded-2xl border border-warning/30 bg-warning/5">
+          <div className="flex items-center justify-between border-b border-warning/20 px-5 py-3">
+            <span className="font-display font-semibold">Renewals due</span>
+            <Link href="/dashboard/trader/instruments" className="text-sm font-medium text-brand hover:underline">View all instruments →</Link>
+          </div>
+          <ul className="divide-y divide-warning/15">
+            {reminders.slice(0, 5).map((i: any) => (
+              <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+                <div>
+                  <div className="font-medium">
+                    {i.category.replace(/_/g, " ")} {i.capacity ? `· ${i.capacity}` : ""}
+                    <span className="ml-2 font-mono text-xs text-ink/50">{i.serial_no ?? ""}</span>
+                  </div>
+                  <div className={`text-sm font-medium ${dueState(i.next_due_on) === "overdue" ? "text-danger" : "text-warning"}`}>
+                    {dueLabel(i.next_due_on)} · {i.business?.trade_name ?? i.business?.legal_name}
+                  </div>
+                </div>
+                <ReverifyButton instrumentId={i.id} businessId={i.business?.id} stateCode={i.business?.state_code ?? null} className="btn-primary" label="Re-verify now" />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <div>

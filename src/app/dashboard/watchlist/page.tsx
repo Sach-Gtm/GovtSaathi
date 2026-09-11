@@ -47,12 +47,15 @@ export default async function Watchlist() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl font-semibold">Watchlist &amp; complaints</h1>
-        <p className="mt-1 text-ink/70">
-          Signals worth a second look. Customer complaints, shops customers keep re-checking, and machines
-          that have gone quiet.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Watchlist &amp; complaints</h1>
+          <p className="mt-1 text-ink/70">
+            Signals worth a second look. Customer complaints, shops customers keep re-checking, and machines
+            that have gone quiet.
+          </p>
+        </div>
+        <a href="/api/export/complaints" className="btn-outline text-sm">Export complaints CSV</a>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

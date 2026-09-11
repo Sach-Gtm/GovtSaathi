@@ -72,6 +72,13 @@
   /* Skip rendering far-offscreen sections until needed (mobile paint cost) */
   .cv-auto { content-visibility: auto; contain-intrinsic-size: 1px 720px; }
 
+  /* Official certificate frame (print + screen) */
+  .cert-guilloche {
+    background-image:
+      repeating-linear-gradient(45deg, rgba(11,46,111,0.05) 0 2px, transparent 2px 9px),
+      repeating-linear-gradient(-45deg, rgba(14,122,75,0.05) 0 2px, transparent 2px 9px);
+  }
+
   /* Section eyebrow used across the site */
   .eyebrow { @apply text-sm font-semibold uppercase tracking-widest text-accent; }
 
@@ -216,6 +223,16 @@ html[data-lang="hi"] .t-hi { display: revert; }
 .gs-float-alt  { animation: gs-float-alt 6s ease-in-out infinite; transform-origin: center; }
 .gs-spin-slow  { animation: gs-spin-slow 40s linear infinite; transform-origin: center; transform-box: fill-box; }
 .gs-scan       { animation: gs-scan 3.4s ease-out infinite; }
+
+/* Print: show only the certificate sheet, hide all app chrome */
+@media print {
+  body { background: #fff !important; }
+  body * { visibility: hidden !important; }
+  .print-sheet, .print-sheet * { visibility: visible !important; }
+  .print-sheet { position: absolute; inset: 0; margin: 0 auto; box-shadow: none !important; }
+  .no-print { display: none !important; }
+  @page { margin: 12mm; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .gs-float, .gs-float-slow, .gs-float-alt, .gs-spin-slow, .gs-scan, .marquee,

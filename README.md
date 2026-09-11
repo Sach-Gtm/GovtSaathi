@@ -4,6 +4,12 @@ Online verification and certification system for weighing and measuring instrume
 
 Traders, Legal Metrology Officers, Government Approved Test Centres (GATCs), allocators and citizens on one traceable rail.
 
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md) — stack, App Router layout, workflow state machine, offline data flow, data model.
+- [Security framework](docs/SECURITY.md) — auth, RBAC + RLS, Ed25519/QR authenticity chain, storage, threat model.
+- [Deployment runbook](docs/DEPLOYMENT.md) — env vars, migration order, signing keys, buckets, smoke test.
+
 ## What's inside
 
 - **Trader flow** — self-registration, businesses, instruments, application for verification / re-verification, certificate view.

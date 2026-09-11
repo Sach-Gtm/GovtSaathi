@@ -17,9 +17,12 @@ export default async function AuditLog() {
   const rows = (data ?? []) as any[];
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-display font-semibold">Audit log</h1>
-        <p className="mt-1 text-ink/70">Every critical action is written here — application submissions, assignments, verifications, revocations.</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-display font-semibold">Audit log</h1>
+          <p className="mt-1 text-ink/70">Every critical action is written here — application submissions, assignments, verifications, revocations.</p>
+        </div>
+        <a href="/api/export/audit" className="btn-outline text-sm">Export CSV</a>
       </div>
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
