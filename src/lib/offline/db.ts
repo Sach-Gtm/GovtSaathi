@@ -46,15 +46,33 @@ export interface PendingVerification {
   status: "queued" | "syncing" | "synced" | "failed";
 }
 
+export interface CachedTolerance {
+  id: string;
+  category: string;
+  accuracy_class: string | null;
+  mpe_value: number;
+  mpe_unit: string;
+  mpe_is_percent: boolean;
+  basis: string | null;
+  reference: string | null;
+}
+
 class OfflineDB extends Dexie {
   assignments!: Table<CachedAssignment, string>;
   pendingVerifications!: Table<PendingVerification, string>;
+  tolerances!: Table<CachedTolerance, string>;
 
   constructor() {
     super("govtsathi-field");
     this.version(1).stores({
       assignments: "id, application_no, scheduled_for",
       pendingVerifications: "local_id, assignment_id, instrument_id, status, performed_at"
+    });
+    // v2 — cache the MPE/tolerance reference for offline auto pass/fail
+    this.version(2).stores({
+      assignments: "id, application_no, scheduled_for",
+      pendingVerifications: "local_id, assignment_id, instrument_id, status, performed_at",
+      tolerances: "id, category"
     });
   }
 }

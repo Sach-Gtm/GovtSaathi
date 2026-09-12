@@ -118,5 +118,13 @@ authenticity checks. See SECURITY.md.
 
 `states/districts · profiles · businesses · instruments · applications ·
 application_instruments · assignments · verification_records · certificates ·
-certificate_scans · complaints · feedback · documents · audit_logs`, plus views
-`field_plan_today` and `cert_scan_stats`. Full DDL in `supabase/migrations/`.
+certificate_scans · complaints · feedback · documents · gatc_centres ·
+tolerances · audit_logs`, plus views `field_plan_today` and `cert_scan_stats`.
+Full DDL in `supabase/migrations/`.
+
+**GATC accreditation** (`gatc_centres`) records each Government Approved Test
+Centre's registration, scope (instrument categories) and validity window;
+allocation ranks GATC verifiers by accreditation validity and scope coverage.
+**Tolerances** (`tolerances`) hold the maximum-permissible-error reference so the
+field app derives pass/fail automatically from reference vs observed readings
+(cached in IndexedDB for offline use).

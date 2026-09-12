@@ -13,29 +13,50 @@ export default async function AllocatorHome() {
   await requireRole(["allocator", "admin"]);
   const supabase = createSupabaseServerClient();
 
-  const [{ data: apps }, { data: officers }, { data: openAssignments }] = await Promise.all([
+  const [{ data: apps }, { data: openAssignments }] = await Promise.all([
     supabase
       .from("applications")
       .select(`
         id, application_no, status, state_code, preferred_date, submitted_at, notes,
         business:businesses(legal_name, trade_name, address_line1, city, state_code),
-        application_instruments:application_instruments(count)
+        application_instruments:application_instruments(instrument:instruments(category))
       `)
       .in("status", ["submitted", "assigned"])
       .order("submitted_at", { ascending: true }),
-    supabase
-      .from("profiles")
-      .select("id, full_name, role, state_code, organisation, employee_code")
-      .in("role", ["officer", "gatc"])
-      .eq("is_active", true)
-      .order("full_name"),
     supabase.from("assignments").select("assignee_id").is("completed_at", null)
   ]);
+
+  // Officers with their GATC centre, if the registry migration is present.
+  const withCentre = await supabase
+    .from("profiles")
+    .select("id, full_name, role, state_code, organisation, employee_code, gatc_centre:gatc_centres(valid_until, is_active, accreditation_scope)")
+    .in("role", ["officer", "gatc"])
+    .eq("is_active", true)
+    .order("full_name");
+  const officers = withCentre.error
+    ? (await supabase.from("profiles").select("id, full_name, role, state_code, organisation, employee_code").in("role", ["officer", "gatc"]).eq("is_active", true).order("full_name")).data ?? []
+    : withCentre.data ?? [];
 
   // open-job count per officer
   const load = new Map<string, number>();
   (openAssignments ?? []).forEach((a: any) => load.set(a.assignee_id, (load.get(a.assignee_id) ?? 0) + 1));
-  const officerRows = (officers ?? []).map((o: any) => ({ ...o, openJobs: load.get(o.id) ?? 0 }));
+  const officerRows = (officers as any[]).map((o: any) => {
+    const c = o.gatc_centre;
+    const accreditationValid = o.role !== "gatc"
+      ? true
+      : !!(c && c.is_active && (!c.valid_until || new Date(c.valid_until) >= new Date()));
+    return {
+      id: o.id,
+      full_name: o.full_name,
+      role: o.role,
+      state_code: o.state_code,
+      organisation: o.organisation,
+      employee_code: o.employee_code,
+      openJobs: load.get(o.id) ?? 0,
+      accreditationValid,
+      scope: (c?.accreditation_scope ?? null) as string[] | null
+    };
+  });
 
   const rows = (apps ?? []) as any[];
   const waiting = rows.filter((r) => r.status === "submitted");
@@ -99,26 +120,32 @@ export default async function AllocatorHome() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {rows.map((a) => (
-                  <tr key={a.id} className="align-top">
-                    <td className="px-4 py-3 font-mono">
-                      <Link href={`/dashboard/trader/applications/${a.id}`} className="text-brand hover:underline">{a.application_no}</Link>
-                    </td>
-                    <td className="px-4 py-3">{a.business?.trade_name ?? a.business?.legal_name}</td>
-                    <td className="px-4 py-3">{[a.business?.city, a.business?.state_code].filter(Boolean).join(", ")}</td>
-                    <td className="px-4 py-3">{a.application_instruments?.[0]?.count ?? 0}</td>
-                    <td className="px-4 py-3">{ageBadge(a.submitted_at)}</td>
-                    <td className="px-4 py-3"><Badge variant={statusBadge(a.status)}>{a.status.replace("_", " ")}</Badge></td>
-                    <td className="px-4 py-3">
-                      <AssignRow
-                        applicationId={a.id}
-                        appState={a.state_code}
-                        officers={officerRows as any}
-                        assigned={a.status === "assigned"}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {rows.map((a) => {
+                  const cats: string[] = Array.from(
+                    new Set((a.application_instruments ?? []).map((r: any) => r.instrument?.category).filter(Boolean))
+                  );
+                  return (
+                    <tr key={a.id} className="align-top">
+                      <td className="px-4 py-3 font-mono">
+                        <Link href={`/dashboard/trader/applications/${a.id}`} className="text-brand hover:underline">{a.application_no}</Link>
+                      </td>
+                      <td className="px-4 py-3">{a.business?.trade_name ?? a.business?.legal_name}</td>
+                      <td className="px-4 py-3">{[a.business?.city, a.business?.state_code].filter(Boolean).join(", ")}</td>
+                      <td className="px-4 py-3">{cats.length}</td>
+                      <td className="px-4 py-3">{ageBadge(a.submitted_at)}</td>
+                      <td className="px-4 py-3"><Badge variant={statusBadge(a.status)}>{a.status.replace("_", " ")}</Badge></td>
+                      <td className="px-4 py-3">
+                        <AssignRow
+                          applicationId={a.id}
+                          appState={a.state_code}
+                          appCategories={cats}
+                          officers={officerRows as any}
+                          assigned={a.status === "assigned"}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

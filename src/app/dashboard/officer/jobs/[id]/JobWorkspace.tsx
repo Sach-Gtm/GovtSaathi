@@ -7,6 +7,7 @@ import { drainSyncQueue } from "@/lib/offline/sync";
 import { Field } from "@/components/ui/Field";
 import { Badge } from "@/components/ui/Badge";
 import { CameraCapture, type CaptureMeta } from "@/components/verify/CameraCapture";
+import { pickTolerance, parseNum, evaluate, mpeLabel, type Tolerance } from "@/lib/tolerance";
 import { OfflineIndicator } from "../../OfflineIndicator";
 
 interface Instrument {
@@ -82,6 +83,37 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
   const [checkInAt, setCheckInAt] = useState<string | null>(assignment.check_in_at);
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
   const [geoState, setGeoState] = useState<string | null>(null);
+  const [tolerances, setTolerances] = useState<Tolerance[]>([]);
+
+  // Load the MPE/tolerance reference (online), cache it for offline auto-checks.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const db = offlineDB();
+      try {
+        const { data, error } = await supabase
+          .from("tolerances")
+          .select("id, category, accuracy_class, mpe_value, mpe_unit, mpe_is_percent, basis, reference");
+        if (!error && data) {
+          if (!cancelled) setTolerances(data as any);
+          await db.tolerances.clear();
+          await db.tolerances.bulkPut(data as any);
+          return;
+        }
+      } catch {
+        /* fall through to cache */
+      }
+      try {
+        const cached = await db.tolerances.toArray();
+        if (!cancelled) setTolerances(cached as any);
+      } catch {
+        /* no cache yet */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase]);
 
   async function checkIn() {
     setGeoState("Getting your location…");
@@ -152,9 +184,34 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
   function setRow(idx: number, patch: Partial<Row>) {
     setRows((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   }
+  // Look up the MPE for an instrument, given the cached reference table.
+  function tolFor(instrumentId: string): Tolerance | null {
+    const inst = instruments.find((i) => i.id === instrumentId);
+    if (!inst) return null;
+    return pickTolerance(tolerances, inst.category, inst.accuracy_class);
+  }
+
   function setObs(idx: number, k: keyof Row["observed_values"], v: string) {
     setRows((prev) =>
-      prev.map((r, i) => (i === idx ? { ...r, observed_values: { ...r.observed_values, [k]: v } } : r))
+      prev.map((r, i) => {
+        if (i !== idx) return r;
+        const observed_values = { ...r.observed_values, [k]: v };
+        const patch: Partial<Row> = { observed_values };
+        // Auto-derive pass/fail from MPE when reference + observed are numeric.
+        const tol = tolFor(r.instrument_id);
+        const ref = parseNum(observed_values.reference);
+        const obs = parseNum(observed_values.observed);
+        if (tol && ref !== null && obs !== null && ref !== 0) {
+          const vd = evaluate(tol, ref, obs);
+          patch.tolerance_ok = vd.ok;
+          patch.outcome = vd.ok ? "pass" : "fail";
+          patch.observed_values = {
+            ...observed_values,
+            error: `${vd.error >= 0 ? "+" : ""}${vd.error.toFixed(3)}`
+          };
+        }
+        return { ...r, ...patch };
+      })
     );
   }
   function addPhoto(idx: number, file: File, meta: CaptureMeta) {
@@ -277,6 +334,10 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
       <ol className="space-y-4">
         {instruments.map((i, idx) => {
           const r = rows[idx];
+          const tol = pickTolerance(tolerances, i.category, i.accuracy_class);
+          const refN = parseNum(r.observed_values.reference);
+          const obsN = parseNum(r.observed_values.observed);
+          const vd = tol && refN !== null && obsN !== null && refN !== 0 ? evaluate(tol, refN, obsN) : null;
           return (
             <li key={i.id} className="card p-5">
               <div className="flex items-start justify-between">
@@ -306,11 +367,38 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
                   <input className="field-input" value={r.observed_values.tolerance}
                     onChange={(e) => setObs(idx, "tolerance", e.target.value)} placeholder="e.g. ±25 g" />
                 </Field>
-                <Field label="Error">
+                <Field label="Error" hint={tol ? "auto-computed from MPE" : undefined}>
                   <input className="field-input" value={r.observed_values.error}
                     onChange={(e) => setObs(idx, "error", e.target.value)} placeholder="e.g. +20 g" />
                 </Field>
               </div>
+
+              {/* MPE auto-verdict */}
+              {tol && (
+                <div
+                  className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-lg border px-3 py-2 text-sm ${
+                    vd ? (vd.ok ? "border-success/30 bg-success/5" : "border-danger/30 bg-danger/5") : "border-border bg-paper"
+                  }`}
+                >
+                  <span className="text-ink/70">
+                    Permissible error <span className="font-semibold text-ink">{mpeLabel(tol)}</span>
+                    {tol.mpe_is_percent && refN ? (
+                      <span className="text-ink/50"> (±{(Math.abs(refN) * tol.mpe_value / 100).toFixed(3)})</span>
+                    ) : null}
+                  </span>
+                  {vd ? (
+                    <>
+                      <span className="text-ink/70">error <span className="font-mono">{vd.error >= 0 ? "+" : ""}{vd.error.toFixed(3)}</span></span>
+                      <span className={`font-semibold ${vd.ok ? "text-success" : "text-danger"}`}>
+                        {vd.ok ? "✓ Within tolerance — auto PASS" : "✗ Over tolerance — auto FAIL"}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-ink/50">enter reference &amp; observed for an automatic check</span>
+                  )}
+                  <span className="ml-auto text-xs text-ink/40">{tol.reference ?? "reference"}</span>
+                </div>
+              )}
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <Field label="Outcome">
@@ -321,7 +409,7 @@ export function JobWorkspace({ assignment, officerId }: { assignment: Assignment
                     <option value="fail">Fail</option>
                   </select>
                 </Field>
-                <Field label="Within tolerance">
+                <Field label="Within tolerance" hint={tol ? "set automatically — override if needed" : undefined}>
                   <select className="field-select" value={r.tolerance_ok === null ? "" : r.tolerance_ok ? "yes" : "no"}
                     onChange={(e) => setRow(idx, { tolerance_ok: e.target.value === "" ? null : e.target.value === "yes" })}>
                     <option value="">—</option>

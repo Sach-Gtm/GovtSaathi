@@ -28,6 +28,7 @@ const NAV: NavItem[] = [
   { href: "/dashboard/admin/field-ops", label: "Field operations", roles: ["admin"] },
   { href: "/dashboard/watchlist", label: "Watchlist & complaints", roles: ["admin"] },
   { href: "/dashboard/admin/audit", label: "Audit log", roles: ["admin"] },
+  { href: "/dashboard/admin/gatc", label: "GATC centres", roles: ["admin"] },
   { href: "/dashboard/admin/users", label: "Users", roles: ["admin"] },
 
   { href: "/dashboard/search", label: "Search records", roles: ["trader", "officer", "gatc", "allocator", "admin"] }

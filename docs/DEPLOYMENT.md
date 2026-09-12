@@ -35,6 +35,8 @@ SQL editor or CLI:
 | `0004_scans_complaints.sql` | `certificate_scans`, `complaints`, `feedback`, `cert_scan_stats` |
 | `0005_access_requests.sql` | Access requests + role-change guard trigger |
 | `0006_documents.sql` | `documents` table + `documents` private bucket (supporting docs) |
+| `0007_gatc_centres.sql` | `gatc_centres` registry + `profiles.gatc_centre_id`, accreditation validity |
+| `0008_tolerances.sql` | `tolerances` MPE reference for automatic pass/fail |
 
 Then seed reference data (`supabase/seed.sql`) for states/districts and demo
 rows.
