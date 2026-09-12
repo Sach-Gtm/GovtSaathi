@@ -37,6 +37,7 @@ SQL editor or CLI:
 | `0006_documents.sql` | `documents` table + `documents` private bucket (supporting docs) |
 | `0007_gatc_centres.sql` | `gatc_centres` registry + `profiles.gatc_centre_id`, accreditation validity |
 | `0008_tolerances.sql` | `tolerances` MPE reference for automatic pass/fail |
+| `0009_notifications.sql` | `notifications` table (in-app alerts + reminder ledger) |
 
 Then seed reference data (`supabase/seed.sql`) for states/districts and demo
 rows.
@@ -83,12 +84,28 @@ The service worker (`public/sw.js`, registered by `components/ui/RegisterSW.tsx`
 and `public/manifest.webmanifest` make the officer app installable and
 offline-capable. No extra build step; ship the `public/` assets as-is.
 
-## 8. Optional: automated expiry reminders (cron)
+## 8. Automated expiry reminders (cron)
 
-In-app renewal reminders work with no cron (computed from `next_due_on` /
-`valid_until`). To push notifications out-of-band, add a protected cron route and
-schedule it (Vercel Cron or Supabase `pg_cron`) daily; guard it with a
-`CRON_SECRET` header. (Roadmap — see SECURITY.md / build plan.)
+The route `GET /api/cron/reminders` scans `instruments.next_due_on` and
+`certificates.valid_until`, and creates a notification for the owner once per
+escalation window (30d → 15d → 7d → overdue), de-duplicated by `dedupe_key`.
+
+- Set **`CRON_SECRET`** in env. The route rejects any request without
+  `Authorization: Bearer $CRON_SECRET` (or an `x-cron-secret` header).
+- On **Vercel**, `vercel.json` already schedules it daily at 03:00 UTC; Vercel
+  injects the `Authorization: Bearer $CRON_SECRET` header automatically.
+- On **Supabase** (`pg_cron` + `pg_net`) or any scheduler, call the URL daily
+  with the same header.
+- **Email (optional):** set `RESEND_API_KEY` and `RESEND_FROM` (a verified
+  sender) to also email newly-created reminders. Without them, reminders are
+  in-app only (bell + `/dashboard/notifications`).
+
+Manual test:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://<domain>/api/cron/reminders
+# → {"ok":true,"scanned":N,"created":M,"emailed":K}
+```
 
 ## 9. Post-deploy smoke test
 

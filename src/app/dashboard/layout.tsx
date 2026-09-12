@@ -4,6 +4,7 @@ import { Logo } from "@/components/ui/Logo";
 import { getSessionProfile, roleLabel, type UserRole } from "@/lib/rbac";
 import { SignOutButton } from "@/components/dashboard/SignOutButton";
 import { DashboardNav, type DashNavItem } from "@/components/dashboard/DashboardNav";
+import { NotificationBell } from "@/components/dashboard/NotificationBell";
 
 interface NavItem extends DashNavItem {
   roles: UserRole[];
@@ -31,7 +32,8 @@ const NAV: NavItem[] = [
   { href: "/dashboard/admin/gatc", label: "GATC centres", roles: ["admin"] },
   { href: "/dashboard/admin/users", label: "Users", roles: ["admin"] },
 
-  { href: "/dashboard/search", label: "Search records", roles: ["trader", "officer", "gatc", "allocator", "admin"] }
+  { href: "/dashboard/search", label: "Search records", roles: ["trader", "officer", "gatc", "allocator", "admin"] },
+  { href: "/dashboard/notifications", label: "Notifications", roles: ["trader", "officer", "gatc", "allocator", "admin"] }
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -50,6 +52,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <div className="font-medium leading-tight">{profile.full_name}</div>
               <div className="text-xs text-ink/60">{roleLabel(profile.role)}</div>
             </div>
+            <NotificationBell />
             <span className="grid h-9 w-9 place-items-center rounded-full bg-brand-soft font-display text-sm font-semibold text-brand">
               {(profile.full_name || "?").trim().charAt(0).toUpperCase()}
             </span>

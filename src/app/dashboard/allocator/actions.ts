@@ -2,6 +2,7 @@
 import { getSessionProfile } from "@/lib/rbac";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
 import { writeAudit } from "@/lib/audit";
+import { notify } from "@/lib/notify";
 
 /**
  * Allocate (or re-allocate) an application to a verifier in one atomic server
@@ -43,6 +44,15 @@ export async function allocate(input: { applicationId: string; assigneeId: strin
     entity_type: "application",
     entity_id: input.applicationId,
     meta: { assignee_id: input.assigneeId, prior: prior.map((p) => p.assignee_id) }
+  });
+  await notify({
+    user_id: input.assigneeId,
+    kind: "assignment",
+    title: "New verification job assigned",
+    body: "An application has been assigned to you. Open your jobs to accept it.",
+    entity_type: "application",
+    entity_id: input.applicationId,
+    link: "/dashboard/officer"
   });
   return { ok: true };
 }

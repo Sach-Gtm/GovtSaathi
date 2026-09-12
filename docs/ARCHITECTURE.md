@@ -119,8 +119,15 @@ authenticity checks. See SECURITY.md.
 `states/districts · profiles · businesses · instruments · applications ·
 application_instruments · assignments · verification_records · certificates ·
 certificate_scans · complaints · feedback · documents · gatc_centres ·
-tolerances · audit_logs`, plus views `field_plan_today` and `cert_scan_stats`.
-Full DDL in `supabase/migrations/`.
+tolerances · notifications · audit_logs`, plus views `field_plan_today` and
+`cert_scan_stats`. Full DDL in `supabase/migrations/`.
+
+**Notifications & reminders.** A scheduled cron (`/api/cron/reminders`, secured
+by `CRON_SECRET`, wired via `vercel.json`) sweeps `next_due_on` / `valid_until`
+and writes `notifications` once per escalation window (dedupe_key), optionally
+emailing via Resend. Assignment and verification events also create
+notifications. The header bell shows the unread count; `/dashboard/notifications`
+is the centre.
 
 **GATC accreditation** (`gatc_centres`) records each Government Approved Test
 Centre's registration, scope (instrument categories) and validity window;

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createSupabaseServerClient, createSupabaseServiceClient } from "@/lib/supabase/server";
 import { signPayload } from "@/lib/signature";
 import { writeAudit } from "@/lib/audit";
+import { notify } from "@/lib/notify";
 
 /**
  * Officer's field device pushes verification records here after a site visit.
@@ -195,6 +196,23 @@ export async function POST(req: Request) {
   if (allDone) {
     await svc.from("applications").update({ status: "verified" }).eq("id", assignment.application_id);
     await svc.from("assignments").update({ completed_at: new Date().toISOString() }).eq("id", body.assignment_id);
+    // Notify the trader that verification is complete
+    const { data: appOwner } = await svc
+      .from("applications")
+      .select("submitted_by, application_no")
+      .eq("id", assignment.application_id)
+      .single();
+    if (appOwner?.submitted_by) {
+      await notify({
+        user_id: appOwner.submitted_by,
+        kind: "verification",
+        title: "Verification complete",
+        body: `Application ${appOwner.application_no} has been verified${certificateNo ? ` — certificate ${certificateNo} issued` : ""}.`,
+        entity_type: "application",
+        entity_id: assignment.application_id,
+        link: `/dashboard/trader/applications/${assignment.application_id}`
+      });
+    }
   }
 
   await svc.from("sync_events").update({ processed: true, processed_at: new Date().toISOString() })
