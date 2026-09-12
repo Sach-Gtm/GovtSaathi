@@ -19,12 +19,22 @@ export default async function AdminGatc() {
   await requireRole(["admin"]);
   const supabase = createSupabaseServerClient();
 
-  const [{ data: centres, error }, { data: states }] = await Promise.all([
-    supabase.from("gatc_centres").select("*").order("state_code").order("name"),
-    supabase.from("states").select("code, name").order("name")
-  ]);
+  let centres: any[] | null = null;
+  let states: { code: string; name: string }[] = [];
+  let unavailable = false;
+  try {
+    const [c, s] = await Promise.all([
+      supabase.from("gatc_centres").select("*").order("state_code").order("name"),
+      supabase.from("states").select("code, name").order("name")
+    ]);
+    if (c.error) unavailable = true;
+    else centres = c.data ?? [];
+    states = (s.data ?? []) as any;
+  } catch {
+    unavailable = true;
+  }
 
-  if (error) {
+  if (unavailable) {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-display font-semibold">GATC centres</h1>

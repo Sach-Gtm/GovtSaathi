@@ -12,15 +12,17 @@ export default async function AllocatorOfficers() {
 
   // Try to join the GATC centre; fall back gracefully if the registry migration
   // (0007) has not been applied yet.
-  const withCentre = await supabase
-    .from("profiles")
-    .select("id, full_name, role, state_code, organisation, employee_code, is_active, email, phone, gatc_centre:gatc_centres(name, registration_no, valid_until, is_active)")
-    .in("role", ["officer", "gatc"])
-    .order("state_code")
-    .order("full_name");
-
-  let rows: any[];
-  if (withCentre.error) {
+  let rows: any[] = [];
+  try {
+    const withCentre = await supabase
+      .from("profiles")
+      .select("id, full_name, role, state_code, organisation, employee_code, is_active, email, phone, gatc_centre:gatc_centres(name, registration_no, valid_until, is_active)")
+      .in("role", ["officer", "gatc"])
+      .order("state_code")
+      .order("full_name");
+    if (withCentre.error) throw withCentre.error;
+    rows = (withCentre.data ?? []) as any[];
+  } catch {
     const plain = await supabase
       .from("profiles")
       .select("id, full_name, role, state_code, organisation, employee_code, is_active, email, phone")
@@ -28,8 +30,6 @@ export default async function AllocatorOfficers() {
       .order("state_code")
       .order("full_name");
     rows = (plain.data ?? []) as any[];
-  } else {
-    rows = (withCentre.data ?? []) as any[];
   }
 
   const centreValid = (c: any) => c && c.is_active && (!c.valid_until || new Date(c.valid_until) >= new Date());

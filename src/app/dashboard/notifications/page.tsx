@@ -8,11 +8,19 @@ export const metadata = { title: "Notifications — MAAPSETU" };
 export default async function NotificationsPage() {
   await requireProfile();
   const supabase = createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("notifications")
-    .select("id, kind, title, body, link, window, read_at, created_at")
-    .order("created_at", { ascending: false })
-    .limit(100);
+  let data: any[] = [];
+  let error = false;
+  try {
+    const res = await supabase
+      .from("notifications")
+      .select("id, kind, title, body, link, window, read_at, created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (res.error) error = true;
+    else data = res.data ?? [];
+  } catch {
+    error = true;
+  }
 
   return (
     <div className="space-y-6">

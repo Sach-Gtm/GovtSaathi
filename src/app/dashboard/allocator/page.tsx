@@ -27,15 +27,19 @@ export default async function AllocatorHome() {
   ]);
 
   // Officers with their GATC centre, if the registry migration is present.
-  const withCentre = await supabase
-    .from("profiles")
-    .select("id, full_name, role, state_code, organisation, employee_code, gatc_centre:gatc_centres(valid_until, is_active, accreditation_scope)")
-    .in("role", ["officer", "gatc"])
-    .eq("is_active", true)
-    .order("full_name");
-  const officers = withCentre.error
-    ? (await supabase.from("profiles").select("id, full_name, role, state_code, organisation, employee_code").in("role", ["officer", "gatc"]).eq("is_active", true).order("full_name")).data ?? []
-    : withCentre.data ?? [];
+  let officers: any[] = [];
+  try {
+    const withCentre = await supabase
+      .from("profiles")
+      .select("id, full_name, role, state_code, organisation, employee_code, gatc_centre:gatc_centres(valid_until, is_active, accreditation_scope)")
+      .in("role", ["officer", "gatc"])
+      .eq("is_active", true)
+      .order("full_name");
+    if (withCentre.error) throw withCentre.error;
+    officers = withCentre.data ?? [];
+  } catch {
+    officers = (await supabase.from("profiles").select("id, full_name, role, state_code, organisation, employee_code").in("role", ["officer", "gatc"]).eq("is_active", true).order("full_name")).data ?? [];
+  }
 
   // open-job count per officer
   const load = new Map<string, number>();
