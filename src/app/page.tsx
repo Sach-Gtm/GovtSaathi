@@ -18,26 +18,33 @@ export default function LandingPage() {
     <main id="main" className="min-h-screen bg-paper">
       <LandingNav />
 
-      {/* ── Hero banner (government-style upper band) ────────────────── */}
-      <section className="relative overflow-hidden gov-band text-white">
-        <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 noise opacity-50" aria-hidden />
+      {/* ── Hero (light, warm) ───────────────────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 grid-canvas opacity-60" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(760px 380px at 88% 6%, rgba(230,167,0,0.12), transparent 60%), radial-gradient(680px 420px at 8% 20%, rgba(11,46,111,0.08), transparent 55%), radial-gradient(700px 420px at 70% 100%, rgba(14,122,75,0.08), transparent 55%)"
+          }}
+          aria-hidden
+        />
         {/* faint rotating chakra */}
-        <svg className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 opacity-[0.08]" viewBox="0 0 200 200" aria-hidden>
+        <svg className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 opacity-[0.06]" viewBox="0 0 200 200" aria-hidden>
           <g className="gs-spin-slow" style={{ transformOrigin: "100px 100px" }}>
-            <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" strokeWidth="1" />
-            <circle cx="100" cy="100" r="60" fill="none" stroke="#fff" strokeWidth="1" />
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#0B2E6F" strokeWidth="1" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#0B2E6F" strokeWidth="1" />
             {Array.from({ length: 24 }).map((_, i) => (
-              <line key={i} x1="100" y1="100" x2="100" y2="8" stroke="#fff" strokeWidth="1" transform={`rotate(${i * 15} 100 100)`} />
+              <line key={i} x1="100" y1="100" x2="100" y2="8" stroke="#0B2E6F" strokeWidth="1" transform={`rotate(${i * 15} 100 100)`} />
             ))}
           </g>
         </svg>
 
         <div className="container-app relative grid gap-10 py-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-20">
           <div>
-            <div className="rise-in mb-5 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium backdrop-blur">
+            <div className="rise-in mb-5 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-ink/10 bg-canvas/70 px-3 py-1.5 text-xs font-medium backdrop-blur">
               <span className="inline-flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-accent" />
+                <span className="h-2 w-2 rounded-full bg-gold" />
                 Smart India Hackathon 2026 · SIH26036
               </span>
             </div>
@@ -52,10 +59,13 @@ export default function LandingPage() {
             <h1 className="t-hi lang-hi rise-in-delay-1 font-display text-3xl font-semibold leading-[1.2] tracking-tight sm:text-4xl lg:text-5xl">
               क्या वह तराज़ू
               <br />
-              <span className="text-saffron">सच में सही है?</span>
+              <span className="relative inline-block text-accent">
+                सच में सही है?
+                <span className="absolute inset-x-0 -bottom-1 h-2 rounded-full bg-gold/50" aria-hidden />
+              </span>
             </h1>
 
-            <p className="rise-in-delay-2 mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+            <p className="rise-in-delay-2 mt-6 max-w-xl text-base leading-relaxed text-ink/75 sm:text-lg">
               <span className="t-en">
                 By law, every scale, petrol pump, weighbridge and measure used in a shop must be checked by
                 the government before use. MAAPSETU brings that whole process online — a shopkeeper applies in
@@ -76,21 +86,21 @@ export default function LandingPage() {
                   <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
-              <Link href="/register" className="btn-outline border-white/30 bg-white/5 text-white hover:border-white/60 hover:bg-white/10">
+              <Link href="/register" className="btn-outline">
                 <span className="t-en">Register your shop</span>
                 <span className="t-hi lang-hi">अपनी दुकान पंजीकृत करें</span>
               </Link>
             </div>
 
-            <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-white/15 pt-6">
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-ink/10 pt-6">
               {[
                 { k: "Free", u: "for anyone to check a scale", h: "किसी के लिए भी मुफ़्त" },
                 { k: "Offline", u: "works in basements & mandis", h: "बिना नेटवर्क भी काम करे" },
                 { k: "3 sec", u: "to confirm at the counter", h: "काउंटर पर पुष्टि" }
               ].map((s) => (
                 <div key={s.u}>
-                  <div className="font-display text-xl font-semibold text-white">{s.k}</div>
-                  <div className="mt-1 text-xs leading-snug text-white/60">
+                  <div className="font-display text-xl font-semibold text-ink">{s.k}</div>
+                  <div className="mt-1 text-xs leading-snug text-ink/60">
                     <span className="t-en">{s.u}</span>
                     <span className="t-hi lang-hi">{s.h}</span>
                   </div>
@@ -105,18 +115,18 @@ export default function LandingPage() {
         </div>
 
         {/* Instrument marquee */}
-        <div className="relative border-t border-white/10 bg-brand-dark/60 backdrop-blur">
-          <div className="container-app flex items-center gap-4 py-3.5 text-sm text-white/60">
-            <span className="shrink-0 font-medium text-white/85">
+        <div className="relative border-y border-border bg-paper/80">
+          <div className="container-app flex items-center gap-4 py-3.5 text-sm text-ink/60">
+            <span className="shrink-0 font-medium text-ink/80">
               <span className="t-en">What gets checked</span>
               <span className="t-hi lang-hi">क्या-क्या जाँचा जाता है</span>
             </span>
-            <span className="h-4 w-px shrink-0 bg-white/20" />
-            <div className="marquee-rail" style={{ ["--paper" as any]: "#0a2350" }}>
+            <span className="h-4 w-px shrink-0 bg-border" />
+            <div className="marquee-rail">
               <div className="marquee gap-10">
                 {INSTRUMENTS.concat(INSTRUMENTS).map((t, i) => (
                   <span key={i} className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                     {t}
                   </span>
                 ))}
@@ -243,7 +253,7 @@ export default function LandingPage() {
             <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
             <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-saffron">
+                <div className="text-xs font-semibold uppercase tracking-widest text-gold">
                   <span className="t-en">Anyone can do this</span>
                   <span className="t-hi lang-hi">कोई भी कर सकता है</span>
                 </div>

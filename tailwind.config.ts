@@ -23,6 +23,12 @@ const config: Config = {
           dark: "#0A5C38",
           soft: "#E4F1EA"
         },
+        // Warm secondary accent (used sparingly for character)
+        gold: {
+          DEFAULT: "#E6A700",
+          dark: "#B98600",
+          soft: "#FBF0CE"
+        },
         success: "#0F9D58",
         warning: "#E37400",
         danger: "#D14343",
