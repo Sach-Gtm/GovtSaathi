@@ -12,17 +12,32 @@ export default async function AdminUsers() {
   const me = await requireRole(["admin"]);
   const supabase = createSupabaseServerClient();
 
-  const [{ data: users }, { data: states }] = await Promise.all([
-    supabase
+  // Full select needs migration 0005 (requested_role/requested_at/access_note).
+  // Fall back to the base columns if that migration isn't applied yet.
+  let rows: any[] = [];
+  try {
+    const r = await supabase
       .from("profiles")
       .select("id, full_name, role, email, phone, state_code, organisation, employee_code, is_active, requested_role, requested_at, access_note, created_at")
       .order("created_at", { ascending: false })
-      .limit(500),
-    supabase.from("states").select("code, name").order("name")
-  ]);
+      .limit(500);
+    if (r.error) throw r.error;
+    rows = r.data ?? [];
+  } catch {
+    const r = await supabase
+      .from("profiles")
+      .select("id, full_name, role, email, phone, state_code, organisation, employee_code, is_active, created_at")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    rows = (r.data ?? []).map((u: any) => ({ ...u, requested_role: null, requested_at: null, access_note: null }));
+  }
 
-  const rows = (users ?? []) as any[];
-  const stateList = (states ?? []) as { code: string; name: string }[];
+  let stateList: { code: string; name: string }[] = [];
+  try {
+    stateList = ((await supabase.from("states").select("code, name").order("name")).data ?? []) as any;
+  } catch {
+    stateList = [];
+  }
 
   const pending = rows.filter((r) => r.requested_role);
   const counts: Record<string, number> = {};

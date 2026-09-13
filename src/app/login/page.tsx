@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { GovScene } from "@/components/ui/GovScene";
+import { ScalesEmblem } from "@/components/ui/ScalesEmblem";
 import { LoginForm } from "./LoginForm";
 
 export const metadata = { title: "Sign in — MAAPSETU" };
@@ -27,6 +28,7 @@ export default function LoginPage({
           </Link>
 
           <div className="max-w-md rise-in">
+            <ScalesEmblem size={96} withLabel className="mb-6" />
             <h2 className="font-display text-4xl font-semibold leading-tight">
               The trust rail for every weighing instrument in India.
             </h2>

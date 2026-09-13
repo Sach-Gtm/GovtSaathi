@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { LandingNav } from "@/components/ui/LandingNav";
 import { SiteFooter } from "@/components/ui/SiteFooter";
 import { RotatingHeadline } from "@/components/ui/RotatingHeadline";
+import { ScalesEmblem } from "@/components/ui/ScalesEmblem";
 import {
   RoleCard,
   TraderIcon,
@@ -251,6 +252,9 @@ export default function LandingPage() {
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl gov-band text-white">
             <div className="pointer-events-none absolute inset-0 grain-light" aria-hidden />
+            <div className="pointer-events-none absolute -bottom-8 -right-6 opacity-20 sm:opacity-25" aria-hidden>
+              <ScalesEmblem size={230} />
+            </div>
             <div className="relative grid gap-8 p-10 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:p-14">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-widest text-gold">
