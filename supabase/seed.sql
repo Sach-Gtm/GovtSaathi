@@ -42,7 +42,12 @@ on conflict (registration_no) do nothing;
 
 -- ============================================================
 -- Tolerances / MPE reference (simplified percent-of-load; see 0008 note)
+-- Guarded: tolerances has no natural unique key, so a plain
+-- "on conflict do nothing" cannot dedupe. Seed only when the table is empty
+-- so re-running this file never creates duplicate rows.
 -- ============================================================
+do $$ begin
+if not exists (select 1 from tolerances) then
 insert into tolerances (category, accuracy_class, mpe_value, mpe_unit, mpe_is_percent, basis, reference) values
   -- weighing family, class-specific
   ('weighing_scale','II',   0.05, '%', true, 'in-service', 'LM (General) Rules 2011, Sch. — Class II (simplified)'),
@@ -60,5 +65,6 @@ insert into tolerances (category, accuracy_class, mpe_value, mpe_unit, mpe_is_pe
   ('length_measure', null,  0.20, '%', true, 'in-service', 'Length measure (simplified)'),
   ('volume_measure', null,  0.50, '%', true, 'in-service', 'Volume measure (simplified)'),
   ('capacity_measure', null,0.50, '%', true, 'in-service', 'Capacity measure (simplified)'),
-  ('other', null,           0.50, '%', true, 'in-service', 'default')
-on conflict do nothing;
+  ('other', null,           0.50, '%', true, 'in-service', 'default');
+end if;
+end $$;
