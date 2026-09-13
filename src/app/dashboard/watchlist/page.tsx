@@ -16,33 +16,51 @@ export default async function Watchlist() {
 
   const ninetyAgo = new Date(Date.now() - 90 * 24 * 3600 * 1000).toISOString();
 
-  const [{ data: complaints }, { data: frequent }, { data: dormant }, openCount] = await Promise.all([
-    supabase
-      .from("complaints")
-      .select("id, complaint_no, shop_name, city, state_code, category, description, status, certificate_no, contact_phone, created_at")
-      .order("created_at", { ascending: false })
-      .limit(50),
-    supabase
-      .from("cert_scan_stats")
-      .select("certificate_no, legal_name, trade_name, city, state_code, instrument_category, serial_no, scans_7d, scans_30d, scans_total, last_scan_at")
-      .gt("scans_30d", 0)
-      .order("scans_7d", { ascending: false })
-      .order("scans_30d", { ascending: false })
-      .limit(10),
-    supabase
-      .from("cert_scan_stats")
-      .select("certificate_no, legal_name, trade_name, city, state_code, instrument_category, serial_no, last_scan_at, age_days, valid_until, revoked")
-      .gt("age_days", 90)
-      .eq("revoked", false)
-      .or(`last_scan_at.is.null,last_scan_at.lt.${ninetyAgo}`)
-      .order("age_days", { ascending: false })
-      .limit(12),
-    supabase.from("complaints").select("id", { count: "exact", head: true }).eq("status", "open")
+  // Each query is isolated so one missing table/view (pending migration) can't
+  // take down the whole page — it just renders that section empty.
+  const safe = async <T,>(p: PromiseLike<{ data: T | null }>): Promise<T | null> => {
+    try {
+      const { data } = await p;
+      return data;
+    } catch {
+      return null;
+    }
+  };
+
+  const [complaints, frequent, dormant, openCount] = await Promise.all([
+    safe(
+      supabase
+        .from("complaints")
+        .select("id, complaint_no, shop_name, city, state_code, category, description, status, certificate_no, contact_phone, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50)
+    ),
+    safe(
+      supabase
+        .from("cert_scan_stats")
+        .select("certificate_no, legal_name, trade_name, city, state_code, instrument_category, serial_no, scans_7d, scans_30d, scans_total, last_scan_at")
+        .gt("scans_30d", 0)
+        .order("scans_7d", { ascending: false })
+        .order("scans_30d", { ascending: false })
+        .limit(10)
+    ),
+    safe(
+      supabase
+        .from("cert_scan_stats")
+        .select("certificate_no, legal_name, trade_name, city, state_code, instrument_category, serial_no, last_scan_at, age_days, valid_until, revoked")
+        .gt("age_days", 90)
+        .eq("revoked", false)
+        .or(`last_scan_at.is.null,last_scan_at.lt.${ninetyAgo}`)
+        .order("age_days", { ascending: false })
+        .limit(12)
+    ),
+    safe(supabase.from("complaints").select("id", { count: "exact", head: true }).eq("status", "open").then((r) => ({ data: r.count ?? 0 })))
   ]);
 
   const cRows = (complaints ?? []) as any[];
   const fRows = (frequent ?? []) as any[];
   const dRows = (dormant ?? []) as any[];
+  const openCountVal = (openCount ?? 0) as number;
   const maxScan = Math.max(1, ...fRows.map((r) => r.scans_30d ?? 0));
 
   return (
@@ -59,7 +77,7 @@ export default async function Watchlist() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatTile label="Open complaints" value={openCount.count ?? 0} accent="#D14343" />
+        <StatTile label="Open complaints" value={openCountVal} accent="#D14343" />
         <StatTile label="Frequently re-checked" value={fRows.length} accent="#E37400" hint="possible dispute" />
         <StatTile label="Quiet 90+ days" value={dRows.length} accent="#8B5CF6" hint="maybe not in use" />
       </div>
